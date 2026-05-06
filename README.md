@@ -141,7 +141,7 @@ Chúng tôi hoan nghênh đóng góp! Vui lòng tạo issue hoặc pull request 
 
 ## Giấy Phép
 
-Dự án này được phân phối dưới giấy phép MIT.
+Dự án này chỉ mang tính chất học thuật.
 
 Sau khi chạy, truy cập:
 
