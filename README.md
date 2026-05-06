@@ -1,4 +1,4 @@
-# Healthcare AI Agent — Trợ Lý Y Tế Thông Minh
+﻿# Healthcare AI Agent — Trợ Lý Y Tế Thông Minh
 
 Healthcare AI Agent là một nền tảng trợ lý y tế hiện đại, được xây dựng với kiến trúc dịch vụ mô-đun và sẵn sàng cho việc triển khai sản xuất. Dự án này sử dụng các công nghệ tiên tiến như FastAPI, LangGraph và FAISS để cung cấp trải nghiệm chatbot y tế thông minh, bao gồm chẩn đoán triệu chứng, lập kế hoạch chăm sóc và quản lý bộ nhớ ngữ nghĩa.
 
@@ -202,3 +202,4 @@ docker compose up --build
 * Dữ liệu người dùng lưu bằng FAISS + metadata JSON để đảm bảo truy vấn nhanh và dễ khôi phục.
 * Kiến trúc dịch vụ tách rõ controller (`app/api.py`) và business logic (`app/services/*`).
 * Mô-đun LLM có thể mở rộng thêm `transformers` / `llama_cpp` để chạy local.
+

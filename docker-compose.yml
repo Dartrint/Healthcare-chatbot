@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  healthcare-api:
+    build: .
+    ports:
+      - "8000:8000"
+      - "8502:8502"
+    volumes:
+      - ./memory_store:/app/memory_store
+      - ./data:/app/data
+    environment:
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - LLM_PROVIDER=${LLM_PROVIDER:-groq}
+      - LLM_MODEL=${LLM_MODEL:-llama-3.1-8b-instant}
+      - EMBEDDING_MODEL=${EMBEDDING_MODEL:-all-MiniLM-L6-v2}
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

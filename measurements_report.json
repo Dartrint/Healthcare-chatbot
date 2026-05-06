@@ -1,0 +1,91 @@
+{
+  "timestamp": "2026-05-06T18:27:09.553671",
+  "test_date": "2026-05-06",
+  "environment": {
+    "python_version": "3.13",
+    "os": "Windows 10",
+    "fastapi_version": "0.111.0"
+  },
+  "quality_metrics": {
+    "individual_tests": [
+      {
+        "id": 1,
+        "name": "Symptom Analysis - Headache with Fever",
+        "category": "medical",
+        "relevance": 0.784,
+        "coherence": 1.0,
+        "coverage": 1.0,
+        "response_time_ms": 1100,
+        "overall": 0.902
+      },
+      {
+        "id": 2,
+        "name": "Symptom Inquiry - Rash",
+        "category": "medical",
+        "relevance": 0.766,
+        "coherence": 0.8,
+        "coverage": 0.9,
+        "response_time_ms": 1200,
+        "overall": 0.819
+      },
+      {
+        "id": 3,
+        "name": "Health Advice - Weight Loss",
+        "category": "wellness",
+        "relevance": 0.814,
+        "coherence": 1.0,
+        "coverage": 0.5,
+        "response_time_ms": 1300,
+        "overall": 0.734
+      },
+      {
+        "id": 4,
+        "name": "Non-medical Query",
+        "category": "non-medical",
+        "relevance": 0.768,
+        "coherence": 1.0,
+        "coverage": 0.571,
+        "response_time_ms": 1400,
+        "overall": 0.741
+      },
+      {
+        "id": 5,
+        "name": "Medical Condition - Sore Throat",
+        "category": "medical",
+        "relevance": 0.757,
+        "coherence": 1.0,
+        "coverage": 1.0,
+        "response_time_ms": 1500,
+        "overall": 0.885
+      }
+    ],
+    "average_quality": 0.8162,
+    "min_quality": 0.734,
+    "max_quality": 0.902,
+    "avg_relevance": 0.7778,
+    "avg_coherence": 0.96,
+    "avg_coverage": 0.7942
+  },
+  "performance_metrics": {
+    "total_requests": 50,
+    "successful_requests": 49,
+    "error_count": 1,
+    "error_rate_percent": 2.0,
+    "active_users": 10,
+    "latency_ms": {
+      "avg": 1207.14,
+      "p95": 1500,
+      "p99": 1500,
+      "min": 900,
+      "max": 1500
+    },
+    "quality": {
+      "avg_score": 0.818,
+      "min_score": 0.738,
+      "max_score": 0.9,
+      "measurements": 50
+    },
+    "throughput_req_per_sec": 31.83,
+    "uptime_seconds": 1.57
+  }
+}
