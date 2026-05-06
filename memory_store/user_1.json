@@ -1,0 +1,92 @@
+[
+  {
+    "user": "Tôi bị cảm rồi, tôi cần thuốc gì",
+    "bot": "Tôi hiểu rằng bạn đang cảm thấy không khỏe và cần sự giúp đỡ. Là một y tá hỗ trợ, tôi sẽ cung cấp cho bạn thông tin chung về các loại thuốc có thể giúp giảm triệu chứng cảm lạnh.\n\nTrước khi tôi đưa ra lời khuyên, xin lưu ý rằng tôi không phải là bác sĩ và không thể chẩn đoán hoặc kê đơn thuốc cho bạn. Nếu bạn đang cảm thấy không khỏe, tôi khuyên bạn nên đến gặp bác sĩ để được chẩn đoán và điều trị chính xác.\n\nNếu bạn đang tìm kiếm thuốc để giảm triệu chứng cảm lạnh, một số lựa chọn phổ biến bao gồm:\n\n- Paracetamol (Tylenol): giúp giảm đau và hạ sốt\n- Ibuprofen (Advil, Motrin): giúp giảm đau và hạ sốt\n- Decongestant (pseudoephedrine hoặc phenylephrine): giúp giảm nghẹt mũi\n- Cough syrup (thuốc ho): giúp giảm ho\n\nTuy nhiên, trước khi sử dụng bất kỳ loại thuốc nào, bạn nên đọc kỹ hướng dẫn sử dụng và tuân theo liều lượng khuyến cáo. Nếu bạn có bất kỳ vấn đề sức khỏe nào hoặc đang sử dụng thuốc khác, bạn nên tham khảo ý kiến của bác sĩ trước khi sử dụng.\n\nXin lưu ý rằng thuốc không thể chữa khỏi cảm lạnh, nhưng có thể giúp giảm triệu chứng. Để cảm lạnh khỏi, bạn nên giữ cho cơ thể được nghỉ ng",
+    "intent": "RAG",
+    "timestamp": "2026-04-29T16:39:53.255194"
+  },
+  {
+    "user": "Triệu chứng của bệnh khó ngủ",
+    "bot": "Tôi hiểu rằng bạn đang tìm kiếm thông tin về triệu chứng của bệnh khó ngủ. Tuy nhiên, tôi cần lưu ý rằng tôi không phải là bác sĩ và không thể chẩn đoán hoặc kê đơn thuốc cho bạn.\n\nNếu bạn đang gặp khó khăn trong việc ngủ, có thể có nhiều nguyên nhân khác nhau. Dưới đây là một số triệu chứng phổ biến của bệnh khó ngủ:\n\n- Khó ngủ hoặc mất ngủ\n- Ngủ không sâu hoặc không ngon\n- Sợ ngủ hoặc lo lắng về việc ngủ\n- Cảm giác mệt mỏi hoặc kiệt sức\n- Suy giảm khả năng tập trung và trí nhớ\n\nNếu bạn đang gặp khó khăn trong việc ngủ, tôi khuyên bạn nên đến gặp bác sĩ để được chẩn đoán và điều trị chính xác. Bác sĩ có thể giúp bạn xác định nguyên nhân của bệnh khó ngủ và đề xuất phương pháp điều trị phù hợp.\n\nTrước khi đến gặp bác sĩ, bạn có thể thử một số biện pháp tự nhiên để giúp cải thiện chất lượng giấc ngủ, chẳng hạn như:\n\n- Tạo môi trường ngủ thoải mái và yên tĩnh\n- Bắt đầu một lịch trình ngủ đều đặn\n- Tránh sử dụng thiết bị điện tử trước khi ngủ\n- Thực hiện các hoạt động thể chất nhẹ nhàng trước khi ngủ\n\nXin lưu ý rằng thuốc không thể chữa khỏi bệnh khó ngủ, nhưng có thể giúp giảm triệu chứng. Để cảm thấy tốt hơn",
+    "intent": "RAG",
+    "timestamp": "2026-04-29T16:40:41.844341"
+  },
+  {
+    "user": "Triệu chứng của đau đầu",
+    "bot": "Tôi hiểu rằng bạn đang tìm kiếm thông tin về triệu chứng của đau đầu. Tuy nhiên, tôi cần lưu ý rằng tôi không phải là bác sĩ và không thể chẩn đoán hoặc kê đơn thuốc cho bạn.\n\nNếu bạn đang gặp khó khăn với đau đầu, có thể có nhiều nguyên nhân khác nhau. Dưới đây là một số triệu chứng phổ biến của đau đầu:\n\n- Đau đầu nhẹ đến nặng\n- Đau đầu ở một bên hoặc cả hai bên đầu\n- Đau đầu có thể lan rộng ra toàn bộ đầu hoặc chỉ tập trung ở một khu vực\n- Đau đầu có thể được kích hoạt bởi các yếu tố như căng thẳng, mệt mỏi, thiếu ngủ, hoặc các vấn đề về sức khỏe khác\n- Có thể có các triệu chứng khác như buồn nôn, nôn mửa, hoặc nhạy cảm với ánh sáng\n\nNếu bạn đang gặp khó khăn với đau đầu, tôi khuyên bạn nên đến gặp bác sĩ để được chẩn đoán và điều trị chính xác. Bác sĩ có thể giúp bạn xác định nguyên nhân của đau đầu và đề xuất phương pháp điều trị phù hợp.\n\nTrước khi đến gặp bác sĩ, bạn có thể thử một số biện pháp tự nhiên để giúp giảm đau đầu, chẳng hạn như:\n\n- Tìm kiếm sự thư giãn và giảm căng thẳng\n- Bắt đầu một lịch trình ngủ đều đặn\n- Tránh sử dụng thiết bị điện tử trước khi",
+    "intent": "RAG",
+    "timestamp": "2026-04-29T16:41:19.223714"
+  },
+  {
+    "user": "Tôi bị khó ngủ ba hôm nay rồi",
+    "bot": "Xin chào! Tôi là trợ lý y tế. Tôi sẽ giúp bạn phân tích tình trạng khó ngủ của mình.\n\n**Có thể nguyên nhân:**\n\n- Stress hoặc lo lắng\n- Thay đổi môi trường hoặc lịch trình\n- Ăn uống không đều hoặc không phù hợp\n- Bệnh lý như hen suyễn, viêm phổi hoặc các vấn đề về tim mạch\n- Sử dụng các loại thuốc có thể ảnh hưởng đến giấc ngủ\n\n**Cấp độ nghiêm trọng:**\n\n- Nếu bạn chỉ khó ngủ một vài đêm và không có bất kỳ triệu chứng khác, thì tình trạng này có thể được coi là nhẹ.\n- Nếu bạn khó ngủ nhiều đêm và có các triệu chứng khác như mệt mỏi, đau đầu hoặc khó tập trung, thì tình trạng này có thể được coi là trung bình.\n- Nếu bạn khó ngủ và có các triệu chứng nghiêm trọng như khó thở, đau ngực hoặc mất ý thức, thì tình trạng này cần được xem xét ngay lập tức.\n\n**Lời khuyên:**\n\n- Hãy thử thư giãn trước khi đi ngủ bằng cách đọc sách, nghe nhạc hoặc thực hành thiền.\n- Tạo môi trường ngủ thoải mái bằng cách điều chỉnh nhiệt độ, ánh sáng và tiếng ồn.\n- Tránh sử dụng điện thoại hoặc các thiết bị điện tử trước khi đi ngủ.\n- Nếu tình trạng khó ngủ kéo dài, hãy tham khảo ý kiến của bác sĩ để loại trừ các",
+    "intent": "SYMPTOM",
+    "timestamp": "2026-04-29T16:41:37.466136"
+  },
+  {
+    "user": "Xin chao",
+    "bot": "Xin chào! Tôi là trợ lý y tế. Tôi sẵn sàng giúp bạn với bất kỳ vấn đề sức khỏe nào bạn đang gặp phải. Bạn có muốn nói về tình trạng sức khỏe của mình không?",
+    "intent": "CHAT",
+    "timestamp": "2026-05-04T12:58:16.507992"
+  },
+  {
+    "user": "Hi",
+    "bot": "Xin chào! Tôi là trợ lý y tế. Tôi sẵn sàng giúp bạn với bất kỳ vấn đề sức khỏe nào bạn đang gặp phải. Bạn có muốn nói về tình trạng sức khỏe của mình không?\n\nTôi nhớ rằng chúng ta đã thảo luận về tình trạng khó ngủ của bạn trước đó. Bạn có muốn tiếp tục thảo luận về vấn đề đó không, hoặc bạn có vấn đề sức khỏe khác cần được giúp đỡ?",
+    "intent": "CHAT",
+    "timestamp": "2026-05-04T13:33:35.439672"
+  },
+  {
+    "user": "Khó ngủ là do nguyên nhân gì?",
+    "bot": "Tôi không phải là bác sĩ và không thể chẩn đoán hoặc kê đơn thuốc cho bạn. Tuy nhiên, dựa trên thông tin bạn cung cấp, có thể nguyên nhân của khó ngủ là:\n\n- Stress hoặc lo lắng\n- Thay đổi môi trường hoặc lịch trình\n- Ăn uống không đều hoặc không phù hợp\n- Bệnh lý như hen suyễn, viêm phổi hoặc các vấn đề về tim mạch\n- Sử dụng các loại thuốc có thể ảnh hưởng đến giấc ngủ\n\nTôi khuyên bạn nên đến gặp bác sĩ để được chẩn đoán và điều trị chính xác. Bác sĩ có thể giúp bạn xác định nguyên nhân của khó ngủ và đề xuất phương pháp điều trị phù hợp.\n\n**Lưu ý:** Nếu bạn đang gặp khó khăn với khó ngủ, tôi khuyên bạn nên đến gặp bác sĩ ngay lập tức nếu bạn có các triệu chứng nghiêm trọng như:\n\n- Khó thở\n- Đau ngực\n- Mất ý thức\n\nHoặc nếu bạn đang gặp khó khăn với các triệu chứng khác như:\n\n- Mệt mỏi\n- Kiệt sức\n- Suy giảm khả năng tập trung và trí nhớ\n\n**Disclaimer:** Thông tin này không phải là một chẩn đoán hoặc lời khuyên y tế. Nếu bạn đang gặp khó khăn với khó ngủ, hãy đến gặp bác sĩ để được chẩn đoán và điều trị chính xác.",
+    "intent": "RAG",
+    "timestamp": "2026-05-04T13:33:54.443074"
+  },
+  {
+    "user": "Tôi mệt mỏi và khó ngủ hai ngày nay rồi. ",
+    "bot": "Tôi hiểu rằng bạn đang cảm thấy mệt mỏi và khó ngủ. Dưới đây là một số nguyên nhân có thể gây ra tình trạng này:\n\n**Có thể gây ra bởi:**\n\n- Sốt hoặc nhiễm trùng\n- Thiếu ngủ hoặc mất ngủ\n- Bệnh lý như tiểu đường, tim mạch hoặc suy giảm miễn dịch\n- Sử dụng thuốc hoặc chất kích thích\n- Áp lực tâm lý hoặc căng thẳng\n\n**Cấp độ nghiêm trọng:**\n\n- Cấp độ 1: Bạn có thể tự chăm sóc tại nhà nếu bạn cảm thấy mệt mỏi nhẹ và có thể ngủ được.\n- Cấp độ 2: Bạn nên đến bệnh viện nếu bạn có các triệu chứng nghiêm trọng như sốt cao, khó thở, hoặc đau đầu dữ dội.\n- Cấp độ 3: Bạn cần được chăm sóc khẩn cấp nếu bạn có các triệu chứng nghiêm trọng như khó thở, đau ngực, hoặc mất ý thức.\n\n**Lời khuyên:**\n\n- Hãy nghỉ ngơi và uống nhiều nước.\n- Nếu bạn có sốt, hãy uống thuốc giảm sốt.\n- Nếu bạn khó ngủ, hãy thử sử dụng phương pháp thư giãn như hít thở sâu hoặc nghe nhạc.\n- Nếu bạn cảm thấy mệt mỏi nặng hoặc có các triệu chứng nghiêm trọng, hãy đến bệnh viện để được chăm sóc.\n\nHãy nhớ rằng, nếu bạn không chắc chắn về tình trạng",
+    "intent": "SYMPTOM",
+    "timestamp": "2026-05-04T13:34:36.939454"
+  },
+  {
+    "user": "Xem plan",
+    "bot": "📋 Plan:\n1. Tao lich hen vao ngay mai (pending)\n2. Them lịch hen vao tuan sau (pending)\n3. Thêm lịch hẹn khám vào thứ năm tuần này (pending)\n4. Thêm lịch hẹn vào 3 phút nữa (pending)\n5. Thông báo nhắc nhở vào 11h39 PM (pending)\n6. thời tiết thế nào (pending)",
+    "intent": "PLANNER",
+    "timestamp": "2026-05-04T13:35:01.358157"
+  },
+  {
+    "user": "Việt Nam có bao nhiêu tỉnh",
+    "bot": "✅ Task added: Việt Nam có bao nhiêu tỉnh\n📅 Date: 2026-05-04\n🟢 Priority: LOW\n📌 Total tasks: 7",
+    "intent": "PLANNER",
+    "timestamp": "2026-05-04T14:08:58.818477"
+  },
+  {
+    "user": "Không phải đang lên plan",
+    "bot": "📋 Plan:\n1. Tao lich hen vao ngay mai (pending)\n2. Them lịch hen vao tuan sau (pending)\n3. Thêm lịch hẹn khám vào thứ năm tuần này (pending)\n4. Thêm lịch hẹn vào 3 phút nữa (pending)\n5. Thông báo nhắc nhở vào 11h39 PM (pending)\n6. thời tiết thế nào (pending)\n7. Việt Nam có bao nhiêu tỉnh (pending)",
+    "intent": "PLANNER",
+    "timestamp": "2026-05-04T14:09:08.816082"
+  },
+  {
+    "user": "Chuyển sang chế độ chat",
+    "bot": "Xin chào! Tôi sẵn sàng giúp bạn với bất kỳ vấn đề sức khỏe nào bạn đang gặp phải. Bạn có muốn nói về tình trạng sức khỏe của mình không?\n\nTôi nhớ rằng chúng ta đã thảo luận về tình trạng khó ngủ của bạn trước đó. Bạn có muốn tiếp tục thảo luận về vấn đề đó không, hoặc bạn có vấn đề sức khỏe khác cần được giúp đỡ?",
+    "intent": "CHAT",
+    "timestamp": "2026-05-04T14:09:19.546395"
+  },
+  {
+    "user": "Việt Nam có bao nhiêu tỉnh",
+    "bot": "✅ Task được thực hiện: Việt Nam có bao nhiêu tỉnh\n\nViệt Nam hiện có 58 tỉnh, thành phố trực thuộc trung ương.\n\nLưu ý: Thông tin này được cung cấp dựa trên dữ liệu hiện tại và có thể thay đổi theo thời gian. Nếu bạn cần thông tin chính xác và cập nhật, vui lòng kiểm tra với các nguồn tin cậy khác.\n\n**Disclaimer:** Thông tin này không phải là một nguồn tin chính thức và không được sử dụng để thay thế cho các nguồn tin chính thức.",
+    "intent": "RAG",
+    "timestamp": "2026-05-04T14:09:29.155330"
+  },
+  {
+    "user": "Cập nhật thông tin hiện tại",
+    "bot": "Xin chào! Tôi là trợ lý y tế. Để giúp tôi hiểu rõ hơn về tình trạng của bạn, xin vui lòng cung cấp thông tin sau:\n\n- Bạn đang cảm thấy như thế nào? (bất thường, đau, khó thở, etc.)\n- Bạn có bất kỳ triệu chứng nào khác không? (sốt, đau đầu, buồn nôn, etc.)\n- Bạn đã có bất kỳ điều trị nào trước đây không?\n\nTôi sẽ cố gắng giúp bạn xác định được nguyên nhân có thể, mức độ nghiêm trọng và hướng dẫn bạn về những gì bạn nên làm tiếp theo.\n\nHãy cho tôi biết thông tin của bạn!",
+    "intent": "SYMPTOM",
+    "timestamp": "2026-05-04T14:09:55.221066"
+  },
+  {
+    "user": "Hello",
+    "bot": "Xin chào! Tôi sẵn sàng giúp bạn với bất kỳ vấn đề sức khỏe nào bạn đang gặp phải. Bạn có muốn nói về tình trạng sức khỏe của mình không?\n\nTôi nhớ rằng chúng ta đã thảo luận về tình trạng khó ngủ của bạn trước đó. Bạn có muốn tiếp tục thảo luận về vấn đề đó không, hoặc bạn có vấn đề sức khỏe khác cần được giúp đỡ?\n\nHãy cho tôi biết thông tin của bạn!",
+    "intent": "CHAT",
+    "timestamp": "2026-05-04T14:15:31.625480"
+  }
+]

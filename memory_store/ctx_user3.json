@@ -1,0 +1,26 @@
+[
+  {
+    "user": "Toi dau hong va sot nhe",
+    "bot": "Tôi hiểu bạn đang nói về \"dau hong\" và \"sốt\". Dưới đây là thông tin:\n\n**Có thể gây ra bởi:**\n\n- Sốt cao do nhiễm trùng (ví dụ: sốt cao do virus, vi khuẩn)\n- Dau hong do dị ứng hoặc phản ứng với một chất nào đó\n- Sốt và đau đầu do các vấn đề về tim mạch hoặc thần kinh\n\n**Cấp độ nghiêm trọng:**\n\n- Nếu bạn có sốt cao (trên 39 độ C) và đau đầu nghiêm trọng, hoặc có dấu hiệu bất thường khác như khó thở, đau ngực, hoặc co giật.\n- Nếu bạn có dấu hiệu dị ứng nghiêm trọng như khó thở, sưng mặt, hoặc ngứa da.\n\n**Làm gì:**\n\n- Nếu bạn có sốt cao, hãy uống nhiều nước và nghỉ ngơi.\n- Nếu bạn có dấu hiệu dị ứng, hãy tìm kiếm sự giúp đỡ ngay lập tức.\n- Nếu bạn không chắc chắn về nguyên nhân hoặc mức độ nghiêm trọng, hãy gọi điện cho bác sĩ hoặc đến bệnh viện gần nhất.\n\nHãy nhớ, nếu bạn có bất kỳ dấu hiệu bất thường nào, hãy tìm kiếm sự giúp đỡ ngay lập tức.",
+    "intent": "SYMPTOM",
+    "timestamp": "2026-04-29T16:16:03.774888"
+  },
+  {
+    "user": "Con trieu chung nao can theo doi?",
+    "bot": "Tôi hiểu bạn đang nói tiếng Việt. Tôi là trợ lý y tế.\n\nCon triều chung có thể do nhiều nguyên nhân khác nhau. Dưới đây là một số khả năng:\n\n- Sốt cao: có thể do nhiễm trùng, viêm phổi, hoặc các bệnh khác.\n- Sốt thấp: có thể do nhiễm trùng nhẹ, hoặc các vấn đề về sức khỏe khác.\n\nCấp độ nghiêm trọng của con triều chung có thể từ nhẹ đến nặng, tùy thuộc vào nguyên nhân và mức độ nghiêm trọng.\n\nĐể xử lý con triều chung, bạn nên:\n\n- Uống nhiều nước để tránh mất nước.\n- Sử dụng thuốc giảm sốt nếu cần.\n- Đi khám bác sĩ nếu sốt không giảm sau 2-3 ngày, hoặc nếu bạn có các triệu chứng khác như ho, đau đầu, hoặc khó thở.\n\nNếu bạn có các triệu chứng nghiêm trọng như khó thở, đau ngực, hoặc sốt cao, hãy gọi cấp cứu ngay lập tức.",
+    "intent": "SYMPTOM",
+    "timestamp": "2026-04-29T16:16:04.376713"
+  },
+  {
+    "user": "Tao task nhac toi uong nuoc moi 2 gio",
+    "bot": "✅ Task added: Tao task nhac toi uong nuoc moi 2 gio\n📅 Date: 2026-04-29\n🟢 Priority: LOW\n📌 Total tasks: 1",
+    "intent": "PLANNER",
+    "timestamp": "2026-04-29T16:16:04.423150"
+  },
+  {
+    "user": "Vay cho toi xem ke hoach",
+    "bot": "📋 Plan:\n1. Tao task nhac toi uong nuoc moi 2 gio (pending)",
+    "intent": "PLANNER",
+    "timestamp": "2026-04-29T16:16:04.464063"
+  }
+]

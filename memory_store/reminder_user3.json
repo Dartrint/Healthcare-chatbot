@@ -1,0 +1,20 @@
+[
+  {
+    "user": "task uong thuoc hom nay",
+    "bot": "✅ Task added: task uong thuoc\n📅 Date: 2026-04-29\n🟢 Priority: LOW\n📌 Total tasks: 1",
+    "intent": "PLANNER",
+    "timestamp": "2026-04-29T16:33:34.400566"
+  },
+  {
+    "user": "toi hoi mot cau khac",
+    "bot": "assistant: Bạn muốn hỏi điều gì khác không?",
+    "intent": "CHAT",
+    "timestamp": "2026-04-29T16:33:35.203023"
+  },
+  {
+    "user": "them mot cau hoi nua",
+    "bot": "assistant: Bạn muốn hỏi điều gì khác không?",
+    "intent": "CHAT",
+    "timestamp": "2026-04-29T16:33:35.467570"
+  }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "user": "task test 1",
+    "bot": "✅ Task added: task test 1\n📅 Date: 2026-04-29\n🟢 Priority: LOW\n📌 Total tasks: 1",
+    "intent": "PLANNER",
+    "timestamp": "2026-04-29T16:30:48.729687"
+  },
+  {
+    "user": "task test 2",
+    "bot": "✅ Task added: task test 2\n📅 Date: 2026-04-29\n🟢 Priority: LOW\n📌 Total tasks: 2",
+    "intent": "PLANNER",
+    "timestamp": "2026-04-29T16:30:48.808343"
+  },
+  {
+    "user": "task test 3",
+    "bot": "✅ Task added: task test 3\n📅 Date: 2026-04-29\n🟢 Priority: LOW\n📌 Total tasks: 3",
+    "intent": "PLANNER",
+    "timestamp": "2026-04-29T16:30:48.886749"
+  },
+  {
+    "user": "task test 4",
+    "bot": "✅ Task added: task test 4\n📅 Date: 2026-04-29\n🟢 Priority: LOW\n📌 Total tasks: 4",
+    "intent": "PLANNER",
+    "timestamp": "2026-04-29T16:30:48.943197"
+  },
+  {
+    "user": "task test 5",
+    "bot": "✅ Task added: task test 5\n📅 Date: 2026-04-29\n🟢 Priority: LOW\n📌 Total tasks: 5",
+    "intent": "PLANNER",
+    "timestamp": "2026-04-29T16:30:49.014303"
+  },
+  {
+    "user": "task test 6",
+    "bot": "✅ Task added: task test 6\n📅 Date: 2026-04-29\n🟢 Priority: LOW\n📌 Total tasks: 6",
+    "intent": "PLANNER",
+    "timestamp": "2026-04-29T16:30:49.083438"
+  },
+  {
+    "user": "task test 7",
+    "bot": "✅ Task added: task test 7\n📅 Date: 2026-04-29\n🟢 Priority: LOW\n📌 Total tasks: 7",
+    "intent": "PLANNER",
+    "timestamp": "2026-04-29T16:30:49.159143"
+  },
+  {
+    "user": "task test 8",
+    "bot": "✅ Task added: task test 8\n📅 Date: 2026-04-29\n🟢 Priority: LOW\n📌 Total tasks: 8",
+    "intent": "PLANNER",
+    "timestamp": "2026-04-29T16:30:49.222178"
+  },
+  {
+    "user": "task test 9",
+    "bot": "✅ Task added: task test 9\n📅 Date: 2026-04-29\n🟢 Priority: LOW\n📌 Total tasks: 9",
+    "intent": "PLANNER",
+    "timestamp": "2026-04-29T16:30:49.298973"
+  },
+  {
+    "user": "task test 10",
+    "bot": "✅ Task added: task test 10\n📅 Date: 2026-04-29\n🟢 Priority: LOW\n📌 Total tasks: 10",
+    "intent": "PLANNER",
+    "timestamp": "2026-04-29T16:30:49.361115"
+  },
+  {
+    "user": "xoa 3,5,6,9",
+    "bot": "🗑️ Deleted 4 task(s):\n- task test 3\n- task test 5\n- task test 6\n- task test 9",
+    "intent": "PLANNER",
+    "timestamp": "2026-04-29T16:30:49.830337"
+  },
+  {
+    "user": "xoa tu 2 den 4",
+    "bot": "🗑️ Deleted 3 task(s):\n- task test 2\n- task test 4\n- task test 7",
+    "intent": "PLANNER",
+    "timestamp": "2026-04-29T16:30:50.135901"
+  }
+]

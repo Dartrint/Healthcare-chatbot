@@ -1,0 +1,26 @@
+[
+  {
+    "user": "task uong thuoc sang",
+    "bot": "✅ Task added: task uong thuoc sang\n📅 Date: 2026-04-29\n🟢 Priority: LOW\n📌 Total tasks: 1",
+    "intent": "PLANNER",
+    "timestamp": "2026-04-29T16:21:18.965797"
+  },
+  {
+    "user": "task di bo toi",
+    "bot": "✅ Task added: task di bo toi\n📅 Date: 2026-04-29\n🟢 Priority: LOW\n📌 Total tasks: 2",
+    "intent": "PLANNER",
+    "timestamp": "2026-04-29T16:21:19.022314"
+  },
+  {
+    "user": "xoa task 1",
+    "bot": "✅ Task added: xoa task 1\n📅 Date: 2026-04-29\n🟢 Priority: LOW\n📌 Total tasks: 3",
+    "intent": "PLANNER",
+    "timestamp": "2026-04-29T16:21:19.120122"
+  },
+  {
+    "user": "xoa het ke hoach",
+    "bot": "✅ Task added: xoa het ke hoach\n📅 Date: 2026-04-29\n🟢 Priority: LOW\n📌 Total tasks: 4",
+    "intent": "PLANNER",
+    "timestamp": "2026-04-29T16:21:19.188274"
+  }
+]

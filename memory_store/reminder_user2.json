@@ -1,0 +1,20 @@
+[
+  {
+    "user": "task uong thuoc hom nay",
+    "bot": "✅ Task added: task uong thuoc\n📅 Date: 2026-04-29\n🟢 Priority: LOW\n📌 Total tasks: 1",
+    "intent": "PLANNER",
+    "timestamp": "2026-04-29T16:32:09.803858"
+  },
+  {
+    "user": "toi hoi mot cau khac",
+    "bot": "🔔 Reminder for today:\n- task uong thuoc\n\nassistant: Bạn muốn hỏi điều gì khác không?",
+    "intent": "CHAT",
+    "timestamp": "2026-04-29T16:32:10.612711"
+  },
+  {
+    "user": "them mot cau hoi nua",
+    "bot": "assistant: Bạn muốn hỏi điều gì khác không?\n\nassistant: 🔔 Reminder for today:\n- task uong thuoc\n\nassistant: Dưới đây là danh sách các nhiệm vụ của bạn:\n- task uong thuoc (LOW, 2026-04-29)\n\nassistant: Bạn muốn thêm một nhiệm vụ mới không?",
+    "intent": "CHAT",
+    "timestamp": "2026-04-29T16:32:11.041190"
+  }
+]

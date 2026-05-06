@@ -1,0 +1,26 @@
+[
+  {
+    "user": "Toi dau hong va sot nhe",
+    "bot": "Xin chào! (Hello!) Tôi hiểu câu hỏi của bạn. Tuy nhiên, tôi cần lưu ý rằng tôi không phải là bác sĩ chuyên khoa, và câu trả lời của tôi không phải là lời khuyên y tế chuyên nghiệp.\n\nĐể trả lời câu hỏi của bạn một cách an toàn và chính xác, tôi cần biết thêm thông tin về tình trạng sức khỏe của bạn. Bạn có thể cho tôi biết bạn đang gặp vấn đề gì với hô hấp và tim mạch không?\n\nTuy nhiên, nếu bạn đang hỏi về số lượng máu và hồng cầu trong cơ thể, tôi có thể trả lời như sau:\n\n- Hồng cầu (hồng xám) là một loại tế bào máu có vai trò quan trọng trong việc vận chuyển oxy từ phổi đến các tế bào trong cơ thể.\n- Số lượng hồng cầu trong cơ thể có thể thay đổi tùy thuộc vào tình trạng sức khỏe của bạn, chẳng hạn như:\n + Hồng cầu cao (tăng hồng cầu): có thể là dấu hiệu của bệnh thiếu máu hoặc các vấn đề về hô hấp.\n + Hồng cầu thấp (giảm hồng cầu): có thể là dấu hiệu của bệnh thiếu máu hoặc các vấn đề về hô hấp.\n\nĐể biết chính xác số lượng hồng cầu trong cơ thể, bạn nên tham khảo ý kiến của bác sĩ chuyên khoa hoặc thực hiện xét nghiệm máu.\n\n**Lưu ý:** Câu trả lời của tôi không phải là lời khuyên y tế chuyên nghiệp. Nếu bạn có bất kỳ",
+    "intent": "RAG",
+    "timestamp": "2026-04-29T16:13:58.879487"
+  },
+  {
+    "user": "Con trieu chung nao can theo doi?",
+    "bot": "Xin chào! (Hello!) Tôi hiểu câu hỏi của bạn. Tuy nhiên, tôi cần lưu ý rằng tôi không phải là bác sĩ chuyên khoa, và câu trả lời của tôi không phải là lời khuyên y tế chuyên nghiệp.\n\nĐể trả lời câu hỏi của bạn một cách an toàn và chính xác, tôi cần biết thêm thông tin về tình trạng sức khỏe của bạn. Bạn có thể cho tôi biết bạn đang gặp vấn đề gì với hô hấp và tim mạch không?\n\nTuy nhiên, nếu bạn đang hỏi về số lượng hồng cầu và hồng xám trong cơ thể, tôi có thể trả lời như sau:\n\n- Hồng cầu (hồng xám) là một loại tế bào máu có vai trò quan trọng trong việc vận chuyển oxy từ phổi đến các tế bào trong cơ thể.\n- Số lượng hồng cầu trong cơ thể có thể thay đổi tùy thuộc vào tình trạng sức khỏe của bạn, chẳng hạn như:\n + Hồng cầu cao (tăng hồng cầu): có thể là dấu hiệu của bệnh thiếu máu hoặc các vấn đề về hô hấp.\n + Hồng cầu thấp (giảm hồng cầu): có thể là dấu hiệu của bệnh thiếu máu hoặc các vấn đề về hô hấp.\n\nĐể biết chính xác số lượng hồng cầu trong cơ thể, bạn nên tham khảo ý kiến của bác sĩ chuyên khoa hoặc thực hiện xét nghiệm máu.\n\n**Lưu ý:** Câu trả lời của tôi không phải là lời khuyên y tế chuyên nghiệp. Nếu bạn có",
+    "intent": "RAG",
+    "timestamp": "2026-04-29T16:13:59.750711"
+  },
+  {
+    "user": "Tao task nhac toi uong nuoc moi 2 gio",
+    "bot": "✅ Task added: Tao task nhac toi uong nuoc moi 2 gio\n📅 Date: 2026-04-29\n🟢 Priority: LOW\n📌 Total tasks: 1",
+    "intent": "PLANNER",
+    "timestamp": "2026-04-29T16:13:59.802926"
+  },
+  {
+    "user": "Vay cho toi xem ke hoach",
+    "bot": "📋 Plan:\n1. Tao task nhac toi uong nuoc moi 2 gio (pending)",
+    "intent": "PLANNER",
+    "timestamp": "2026-04-29T16:14:00.146335"
+  }
+]

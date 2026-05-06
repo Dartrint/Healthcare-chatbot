@@ -1,0 +1,237 @@
+{
+  "user_1": [
+    {
+      "id": 1,
+      "task": "Tao lich hen vao ngay mai",
+      "date": "2026-04-29",
+      "priority": "high",
+      "status": "pending",
+      "created_at": "2026-04-28T20:13:41.563783",
+      "reminder_sent": true,
+      "last_notified_date": "2026-04-29"
+    },
+    {
+      "id": "f841ba9e-9f56-46a6-94d6-011cf41ad344",
+      "task": "Them lịch hen vao tuan sau",
+      "date": "2026-04-29",
+      "priority": "low",
+      "status": "pending",
+      "created_at": "2026-04-29T14:07:17.900334",
+      "reminder_sent": true,
+      "last_notified_date": "2026-04-29"
+    },
+    {
+      "id": "d3b1cc30-e47a-4319-a24e-77f579c657dd",
+      "task": "Thêm lịch hẹn khám vào thứ năm tuần này",
+      "date": "2026-04-29",
+      "priority": "low",
+      "status": "pending",
+      "created_at": "2026-04-29T16:18:29.906566",
+      "last_notified_date": "2026-04-29"
+    },
+    {
+      "id": "6e0770d2-7dad-4c83-864c-aff4a831d84c",
+      "task": "Thêm lịch hẹn vào 3 phút nữa",
+      "date": "2026-04-29",
+      "priority": "low",
+      "status": "pending",
+      "created_at": "2026-04-29T16:37:58.432662",
+      "last_notified_date": "2026-04-29"
+    },
+    {
+      "id": "5637f011-e81f-47b5-beb6-734ba716bc56",
+      "task": "Thông báo nhắc nhở vào 11h39 PM",
+      "date": "2026-04-29",
+      "priority": "low",
+      "status": "pending",
+      "created_at": "2026-04-29T16:38:25.029176",
+      "last_notified_date": "2026-04-29"
+    },
+    {
+      "id": "dbaeaeae-794c-47af-aa47-c71d7123f741",
+      "task": "thời tiết thế nào",
+      "date": "2026-04-29",
+      "priority": "low",
+      "status": "pending",
+      "created_at": "2026-04-29T16:38:41.117853",
+      "last_notified_date": "2026-04-29"
+    },
+    {
+      "id": "3f5fc0d1-e92c-41b7-a5b9-512b06ec7e46",
+      "task": "Việt Nam có bao nhiêu tỉnh",
+      "date": "2026-05-04",
+      "priority": "low",
+      "status": "pending",
+      "created_at": "2026-05-04T14:08:58.800815"
+    }
+  ],
+  "Tran Duy An": [
+    {
+      "id": "d210787e-0306-47aa-8e12-319c9e9b680d",
+      "task": "Lịch khám mắt vào ngày 30/4",
+      "date": "2026-04-29",
+      "priority": "low",
+      "status": "pending",
+      "created_at": "2026-04-29T16:45:44.373287",
+      "last_notified_date": "2026-04-29"
+    },
+    {
+      "id": "7983c8c1-c0c5-4205-9a52-e622ae731376",
+      "task": "Cuộc họp vào tuần sau",
+      "date": "2026-04-29",
+      "priority": "low",
+      "status": "pending",
+      "created_at": "2026-04-29T16:46:13.823308",
+      "last_notified_date": "2026-04-29"
+    }
+  ],
+  "e2e_plan_user": [
+    {
+      "id": "53d405b5-d426-41f3-b84e-b25547374d6e",
+      "task": "task uong thuoc hom nay luc 20:00",
+      "date": "2026-04-29",
+      "priority": "low",
+      "status": "completed",
+      "created_at": "2026-04-29T16:07:38.348948",
+      "completed_at": "2026-04-29T16:07:38.401678"
+    }
+  ],
+  "ctx_user": [
+    {
+      "id": "77de607b-0129-488a-954d-98c884fc2dd5",
+      "task": "Tao task nhac toi uong nuoc moi 2 gio",
+      "date": "2026-04-29",
+      "priority": "low",
+      "status": "pending",
+      "created_at": "2026-04-29T16:13:26.735154"
+    }
+  ],
+  "ctx_user2": [
+    {
+      "id": "43256a8e-76f7-45e7-b267-9c7de74c9a9a",
+      "task": "Tao task nhac toi uong nuoc moi 2 gio",
+      "date": "2026-04-29",
+      "priority": "low",
+      "status": "pending",
+      "created_at": "2026-04-29T16:13:59.801151"
+    }
+  ],
+  "ctx_user3": [
+    {
+      "id": "e68bc1c1-a8e7-4aaf-ada6-cfaf5cd30e6f",
+      "task": "Tao task nhac toi uong nuoc moi 2 gio",
+      "date": "2026-04-29",
+      "priority": "low",
+      "status": "pending",
+      "created_at": "2026-04-29T16:16:04.421377"
+    }
+  ],
+  "delete_plan_user": [
+    {
+      "id": "32e0af2d-891f-4c95-8809-68b64a1138ab",
+      "task": "task uong thuoc sang",
+      "date": "2026-04-29",
+      "priority": "low",
+      "status": "pending",
+      "created_at": "2026-04-29T16:21:18.964326"
+    },
+    {
+      "id": "569db8ae-04d5-4f9c-a8ac-873e93ff858d",
+      "task": "task di bo toi",
+      "date": "2026-04-29",
+      "priority": "low",
+      "status": "pending",
+      "created_at": "2026-04-29T16:21:19.020449"
+    },
+    {
+      "id": "e23a1248-0aef-454e-a56e-06d827052cb8",
+      "task": "xoa task 1",
+      "date": "2026-04-29",
+      "priority": "low",
+      "status": "pending",
+      "created_at": "2026-04-29T16:21:19.118533"
+    },
+    {
+      "id": "203caf18-0f49-4bc2-b04f-9a75e229e770",
+      "task": "xoa het ke hoach",
+      "date": "2026-04-29",
+      "priority": "low",
+      "status": "pending",
+      "created_at": "2026-04-29T16:21:19.186631"
+    }
+  ],
+  "delete_plan_user2": [],
+  "batch_del_user": [
+    {
+      "id": "c5924feb-65a2-488c-84c3-93c25053d3dd",
+      "task": "task test 1",
+      "date": "2026-04-29",
+      "priority": "low",
+      "status": "pending",
+      "created_at": "2026-04-29T16:30:48.713742",
+      "last_notified_date": "2026-04-29"
+    },
+    {
+      "id": "60842660-db32-49d5-b751-58f2c0b9c73b",
+      "task": "task test 8",
+      "date": "2026-04-29",
+      "priority": "low",
+      "status": "pending",
+      "created_at": "2026-04-29T16:30:49.213393",
+      "last_notified_date": "2026-04-29"
+    },
+    {
+      "id": "a82fe291-80a0-4c34-bdc1-03e6a6bdb1c4",
+      "task": "task test 10",
+      "date": "2026-04-29",
+      "priority": "low",
+      "status": "pending",
+      "created_at": "2026-04-29T16:30:49.351313",
+      "last_notified_date": "2026-04-29"
+    }
+  ],
+  "reminder_user": [
+    {
+      "id": "fc92bcfa-c07b-4547-9322-9aa6fa69f320",
+      "task": "task uong thuoc hom nay",
+      "date": "2026-04-29",
+      "priority": "low",
+      "status": "pending",
+      "created_at": "2026-04-29T16:30:59.123330",
+      "last_notified_date": "2026-04-29"
+    }
+  ],
+  "reminder_user2": [
+    {
+      "id": "69daa068-8f9b-460e-842c-b9569e8335ba",
+      "task": "task uong thuoc",
+      "date": "2026-04-29",
+      "priority": "low",
+      "status": "pending",
+      "created_at": "2026-04-29T16:32:09.802685",
+      "last_notified_date": "2026-04-29"
+    }
+  ],
+  "reminder_debug": [
+    {
+      "id": "8f24f0fe-05a6-4d91-87cd-8f749d88ad76",
+      "task": "task test",
+      "date": "2026-04-29",
+      "priority": "low",
+      "status": "pending",
+      "created_at": "2026-04-29T16:32:22.399142",
+      "last_notified_date": "2026-04-29"
+    }
+  ],
+  "reminder_user3": [
+    {
+      "id": "38b6d217-1b17-4348-aada-69e4865015d4",
+      "task": "task uong thuoc",
+      "date": "2026-04-29",
+      "priority": "low",
+      "status": "pending",
+      "created_at": "2026-04-29T16:33:34.399071",
+      "last_notified_date": "2026-04-29"
+    }
+  ]
+}

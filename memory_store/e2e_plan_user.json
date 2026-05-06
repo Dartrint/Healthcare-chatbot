@@ -1,0 +1,12 @@
+[
+  {
+    "user": "plan task uong thuoc today luc 20:00",
+    "bot": "📋 No plan found.",
+    "timestamp": "2026-04-29T16:06:59.248213"
+  },
+  {
+    "user": "task uong thuoc hom nay luc 20:00",
+    "bot": "✅ Task added: task uong thuoc hom nay luc 20:00\n📅 Date: 2026-04-29\n🟢 Priority: LOW\n📌 Total tasks: 1",
+    "timestamp": "2026-04-29T16:07:38.350595"
+  }
+]
