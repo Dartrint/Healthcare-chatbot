@@ -5,6 +5,7 @@ __pycache__/
 *.pyo
 *.pyd
 *.log
+CV_PROJECT_DESCRIPTION.md
 *.faiss
 memory_store/
 measurements_report.json
