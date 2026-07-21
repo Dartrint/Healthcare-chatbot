@@ -26,7 +26,11 @@ class EmbeddingService:
         ):
             try:
                 self.model = SentenceTransformer(self.model_name)
-                self.dim = int(self.model.get_sentence_embedding_dimension())
+                # Use new API if available, fallback to deprecated method
+                if hasattr(self.model, 'get_embedding_dimension'):
+                    self.dim = int(self.model.get_embedding_dimension())
+                else:
+                    self.dim = int(self.model.get_sentence_embedding_dimension())
                 self.__class__._cached_model = self.model
                 self.__class__._cached_model_name = self.model_name
             except Exception:

@@ -1,205 +1,237 @@
 ﻿# Healthcare AI Agent — Trợ Lý Y Tế Thông Minh
 
-Healthcare AI Agent là một nền tảng trợ lý y tế hiện đại, được xây dựng với kiến trúc dịch vụ mô-đun và sẵn sàng cho việc triển khai sản xuất. Dự án này sử dụng các công nghệ tiên tiến như FastAPI, LangGraph và FAISS để cung cấp trải nghiệm chatbot y tế thông minh, bao gồm chẩn đoán triệu chứng, lập kế hoạch chăm sóc và quản lý bộ nhớ ngữ nghĩa.
+Hệ thống trợ lý y tế AI sử dụng **LangGraph** để điều phối luồng hội thoại, **FAISS** cho bộ nhớ vector, và **RAG** để truy vấn kiến thức y khoa. Hỗ trợ chat văn bản, nhập liệu giọng nói, quản lý kế hoạch chăm sóc sức khỏe, và tìm kiếm thông tin y tế từ web.
 
-## Tính Năng Chính
+---
 
-- **Trợ Lý Y Tế Thông Minh**: Hỗ trợ chẩn đoán triệu chứng, tư vấn y tế và lập kế hoạch chăm sóc sức khỏe.
-- **Kiến Trúc Dịch Vụ Mô-Đun**: Tách biệt rõ ràng giữa các dịch vụ như RAG, symptom triage, planner và memory.
-- **Bộ Nhớ Ngữ Nghĩa**: Sử dụng FAISS để lưu trữ và truy xuất thông tin ngữ nghĩa, kết hợp với dataset RAG fallback.
-- **Giao Diện Người Dùng**: Streamlit UI cho việc thử nghiệm nhanh và tương tác trực tiếp.
-- **Triển Khai Dễ Dàng**: Docker-ready với persistent memory và plans.
-- **API RESTful**: FastAPI backend với các endpoint mạnh mẽ cho tích hợp.
-
-## Kiến Trúc Hệ Thống
+## Kiến trúc tổng quan
 
 ```
-User → FastAPI → HealthcareAgent → LangGraph StateGraph
-                                 ├── RouterService (định tuyến yêu cầu)
-                                 ├── RAGService (truy xuất thông tin)
-                                 ├── SymptomService (phân tích triệu chứng)
-                                 ├── PlannerService (lập kế hoạch)
-                                 └── VectorMemoryService (quản lý bộ nhớ vector)
+┌─────────────┐     ┌──────────┐     ┌──────────────────────────────────────┐
+│  Streamlit  │────▶│ FastAPI  │────▶│        LangGraph StateGraph          │
+│  (UI)       │◀────│ (API)    │◀────│                                      │
+└─────────────┘     └──────────┘     │  route → {rag, symptom, planner,    │
+                                      │           chat}                     │
+                                      └──────────┬───────────────────────────┘
+                                                 │
+                          ┌──────────────────────┼──────────────────────────┐
+                          ▼                      ▼                          ▼
+                   ┌──────────┐          ┌──────────────┐          ┌──────────────┐
+                   │ RAG      │          │ Symptom      │          │ Planner      │
+                   │ (+Web)   │          │ (LLM phân    │          │ (quản lý     │
+                   │          │          │  tích triệu  │          │  task)       │
+                   │          │          │  chứng)      │          │              │
+                   └──────────┘          └──────────────┘          └──────────────┘
+                          │                      │                        │
+                          ▼                      ▼                        ▼
+                   ┌──────────┐          ┌──────────────┐          ┌──────────────┐
+                   │ Memory   │          │ LLM (Groq/   │          │ MCP Gateway  │
+                   │ (FAISS)  │          │ Ollama)      │          │ (thời tiết,  │
+                   │          │          │              │          │  web search) │
+                   └──────────┘          └──────────────┘          └──────────────┘
 ```
 
-Hệ thống sử dụng LangGraph để orchestrate workflow, đảm bảo luồng xử lý logic và hiệu quả.
+### Luồng xử lý một yêu cầu chat
 
-## Cấu Trúc Dự Án
+1. **API nhận request** (`POST /chat`) → gọi `HealthcareAgent.chat(user_id, message)`
+2. **Agent** khởi tạo `HealthcareGraph` và gọi `graph.run()`
+3. **RouterService** phân loại ý định người dùng dựa trên:
+   - Lịch sử hội thoại (6 message gần nhất)
+   - Bộ nhớ vector (3 kết quả tương đồng nhất từ FAISS)
+   - Ý định của message trước đó
+4. **StateGraph** rẽ nhánh dựa trên ý định:
 
-- `app/api.py`: REST API, middleware và routes.
-- `app/agents/healthcare_agent.py`: Điểm nhập chính cho orchestration agent.
-- `app/graphs/healthcare_graph.py`: Định nghĩa LangGraph state graph và flow.
-- `app/services/`: Lớp dịch vụ bao gồm:
-  - `chat_memory.py`: Quản lý bộ nhớ chat.
-  - `embedding.py`: Xử lý embedding.
-  - `llm.py`: Tích hợp LLM (Groq hoặc local).
-  - `mcp_gateway.py`: Cổng MCP.
-  - `memory.py`: Quản lý bộ nhớ.
-  - `planner.py`: Dịch vụ lập kế hoạch.
-  - `quality_metrics.py`: Đo lường chất lượng.
-  - `rag.py`: Retrieval-Augmented Generation.
-  - `router.py`: Định tuyến.
-  - `symptom.py`: Phân tích triệu chứng.
-- `app/config.py`: Cấu hình môi trường và đường dẫn.
-- `main.py`: Điểm khởi chạy uvicorn.
-- `streamlit_app.py`: Giao diện Streamlit cho demo.
-- `requirements.txt`: Danh sách dependencies.
-- `memory_store/`: Lưu trữ FAISS và JSON cho bộ nhớ.
-- `data/`: Nguồn dữ liệu cho RAG.
-- `tools/`: Các công cụ bổ sung.
+| Intent | Nhánh      | Xử lý                                                                 |
+|--------|------------|-----------------------------------------------------------------------|
+| `RAG`  | Medical    | Tra cứu RAG (bệnh, thuốc, điều trị) + web search y tế + LLM tổng hợp |
+| `SYMPTOM` | Sức khỏe cá nhân | Phân tích triệu chứng, đưa ra lời khuyên                               |
+| `PLANNER` | Kế hoạch   | Tạo task mới, hiển thị kế hoạch, hướng dẫn xoá/hoàn thành qua UI     |
+| `CHAT` | Trò chuyện | Hội thoại thông thường + tra cứu thời tiết/thời gian/web              |
 
-## Công Nghệ Sử Dụng
+5. **Memory** được lưu tự động sau mỗi lượt chat (FAISS + JSON metadata)
 
-- **Python 3.13+**: Ngôn ngữ chính.
-- **FastAPI**: Framework backend RESTful.
-- **Uvicorn**: ASGI server.
-- **Streamlit**: Giao diện web nhanh.
-- **Groq LLM**: Model ngôn ngữ lớn cho inference.
-- **LangGraph**: Orchestration cho workflow.
-- **FAISS**: Vector database cho semantic search.
-- **SentenceTransformers**: Embedding models.
-- **python-dotenv**: Quản lý biến môi trường.
+---
 
-## Cài Đặt
+## Cấu trúc thư mục
 
-1. **Tạo Virtual Environment**:
-   ```bash
-   python -m venv .venv
-   .venv\Scripts\activate  # Trên Windows
-   pip install -r requirements.txt
-   ```
+```
+Healthcare-chatbot/
+├── app/
+│   ├── api.py                    # REST API (FastAPI) — endpoints, middleware
+│   ├── config.py                 # Biến môi trường, đường dẫn
+│   ├── schemas.py                # Pydantic models
+│   ├── agents/
+│   │   └── healthcare_agent.py   # Lớp agent chính, interface cho graph
+│   ├── graphs/
+│   │   └── healthcare_graph.py   # LangGraph StateGraph + 4 nhánh xử lý
+│   └── services/
+│       ├── embedding.py          # Tạo embedding vector (SentenceTransformers)
+│       ├── llm.py                # Tích hợp LLM (Groq / Ollama)
+│       ├── memory.py             # VectorMemoryService (FAISS + JSON)
+│       ├── mcp_gateway.py        # Cổng tool: thời tiết, thời gian, web search
+│       ├── planner.py            # Quản lý kế hoạch / task / reminder
+│       ├── quality_metrics.py    # Đo lường chất lượng hệ thống
+│       ├── rag.py                # Retrieval-Augmented Generation (dataset y tế)
+│       ├── router.py             # Phân loại ý định hội thoại
+│       ├── symptom.py            # Phân tích triệu chứng sức khỏe
+│       ├── tracer.py             # Decorator tracing (LangChain)
+│       └── voice_chat.py         # Speech-to-text + Text-to-speech
+├── data/
+│   ├── real_healthcare_data.csv  # Dataset y tế (bệnh, triệu chứng, điều trị)
+│   └── who_healthcare_data.csv   # Dataset từ WHO
+├── memory_store/                 # FAISS index + JSON metadata (tự động tạo)
+├── .env.example                  # Mẫu cấu hình môi trường
+├── .gitignore
+├── docker-compose.yml            # Docker Compose
+├── Dockerfile
+├── main.py                       # Entry point FastAPI (uvicorn)
+├── requirements.txt
+└── streamlit_app.py              # Giao diện người dùng (Streamlit)
+```
 
-2. **Cấu Hình Môi Trường**:
-   Tạo file `.env` ở thư mục gốc với nội dung sau:
-   ```env
-   GROQ_API_KEY=your_groq_api_key_here
-   LLM_PROVIDER=groq
-   LLM_MODEL=llama-3.1-8b-instant
-   EMBEDDING_MODEL=all-MiniLM-L6-v2
-   API_HOST=127.0.0.1
-   API_PORT=8000
-   ```
+---
 
-   Nếu sử dụng local LLM:
-   ```env
-   LLM_PROVIDER=local
-   LOCAL_LLM_PATH=C:\path\to\your\local-model.bin
-   ```
+## Tính năng chi tiết
 
-   > Lưu ý: Local provider hiện tại chỉ hỗ trợ cấu hình; cần cài đặt runtime bổ sung cho inference local.
+### 1. Chat thông minh với định tuyến tự động (`/chat`)
+- Phân loại ý định người dùng thành 4 nhánh
+- Kết hợp lịch sử hội thoại + bộ nhớ vector để đưa ra câu trả lời chính xác
+- Hỗ trợ tiếng Việt
 
-## Chạy Ứng Dụng
+### 2. Tra cứu kiến thức y khoa (RAG)
+- 25+ bệnh lý phổ biến từ WHO, CDC, NIH
+- Dữ liệu: triệu chứng, nguyên nhân, phòng ngừa, điều trị
+- Fallback: tìm kiếm web y tế (Tavily) khi dataset không đủ
 
-### Backend (FastAPI)
+### 3. Phân tích triệu chứng cá nhân
+- Nhập triệu chứng → nhận tư vấn sức khỏe sơ bộ
+- Cảnh báo nếu triệu chứng nghiêm trọng (cần gặp bác sĩ)
+
+### 4. Quản lý kế hoạch chăm sóc sức khỏe
+- Tạo task: "Nhắc tôi uống thuốc lúc 8h sáng"
+- Xem kế hoạch, đánh dấu hoàn thành, xoá task (qua UI buttons)
+- Reminder theo ngày
+
+### 5. Voice Chat
+- **Speech-to-Text**: Upload file audio → nhận text
+- **Text-to-Speech**: Tự động phát giọng nói phản hồi
+- Hỗ trợ: WAV, MP3, OGG
+
+### 6. Bộ nhớ ngữ nghĩa (FAISS)
+- Lưu trữ lịch sử chat dưới dạng embedding vector
+- Truy xuất thông tin tương đồng theo ngữ nghĩa
+- Persist giữa các lần chạy (file `.faiss` + `.json`)
+
+### 7. Tra cứu thời gian thực
+- Thời tiết (mô phỏng / thực tế)
+- Thời gian hiện tại
+- Web search (Tavily API) cho thông tin cập nhật
+
+### 8. API Endpoints
+
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| GET | `/` | Trang chủ + danh sách endpoints |
+| GET | `/health` | Kiểm tra trạng thái |
+| GET | `/metrics` | Thống kê hệ thống (bộ nhớ, kế hoạch) |
+| POST | `/chat` | Gửi tin nhắn chat |
+| GET | `/plan/{user_id}` | Xem kế hoạch người dùng |
+| POST | `/plan/complete` | Đánh dấu task hoàn thành |
+| POST | `/plan/batch-complete` | Hoàn thành nhiều task |
+| POST | `/plan/batch-delete` | Xoá nhiều task |
+| DELETE | `/plan/{user_id}` | Xoá toàn bộ kế hoạch |
+| DELETE | `/plan/{user_id}/{task_id}` | Xoá một task |
+| GET | `/reminders/{user_id}` | Lấy reminder hôm nay |
+| GET | `/memory/{user_id}` | Xem lịch sử memory |
+| DELETE | `/memory/{user_id}` | Xoá memory |
+| GET | `/voice/status` | Kiểm tra voice service |
+| POST | `/voice/transcribe` | Chuyển audio → text |
+| POST | `/voice/synthesize` | Chuyển text → audio |
+
+---
+
+## Cài đặt & Chạy
+
+### Yêu cầu
+- Python 3.13+
+- pip / venv
+
+### Cài đặt
 
 ```bash
+# Clone & cd vào thư mục
+
+# Tạo virtual environment
+python -m venv .venv
+.venv\Scripts\activate    # Windows
+source .venv/bin/activate  # Linux/macOS
+
+# Cài dependencies
+pip install -r requirements.txt
+```
+
+### Cấu hình
+
+Copy `.env.example` thành `.env` và điền API key:
+
+```env
+GROQ_API_KEY=gsk_...             # Bắt buộc cho LLM
+LLM_PROVIDER=groq                 # hoặc ollama
+LLM_MODEL=llama-3.1-8b-instant
+TAVILY_API_KEY=tvly-...           # Tùy chọn (web search)
+```
+
+### Chạy
+
+```bash
+# Backend API
 python main.py
-```
+# → http://127.0.0.1:8000
+# → http://127.0.0.1:8000/docs (Swagger)
 
-Hoặc trực tiếp với uvicorn:
-```bash
-uvicorn main:app --host 0.0.0.0 --port 8000
-```
-
-Ứng dụng sẽ chạy tại `http://127.0.0.1:8000`.
-
-### Giao Diện Demo (Streamlit)
-
-```bash
+# Giao diện Streamlit (terminal khác)
 streamlit run streamlit_app.py
 ```
 
-Truy cập giao diện tại địa chỉ được cung cấp bởi Streamlit.
-
 ### Docker
-
-Sử dụng Docker Compose để chạy toàn bộ stack:
-```bash
-docker-compose up --build
-```
-
-## API Endpoints
-
-- `GET /`: Trang chủ.
-- `POST /chat`: Gửi tin nhắn chat.
-- `GET /metrics`: Lấy số liệu về người dùng và tasks.
-- Các endpoint khác cho quản lý memory và plans.
-
-Tham khảo `app/api.py` để biết chi tiết.
-
-## Cải Tiến Gần Đây
-
-1. Tinh gọn `app/config.py` chỉ còn cấu hình môi trường.
-2. Cải thiện `app/services/llm.py` để đọc đúng `LLM_PROVIDER` và `LOCAL_LLM_PATH`.
-3. Thêm endpoint `GET /metrics` để đo lường.
-4. `main.py` hỗ trợ cấu hình `API_HOST`/`API_PORT` từ `.env`.
-5. Kiến trúc rõ ràng, dễ bảo trì và mở rộng.
-
-## Đóng Góp
-
-Chúng tôi hoan nghênh đóng góp! Vui lòng tạo issue hoặc pull request trên GitHub.
-
-## Giấy Phép
-
-Dự án này chỉ mang tính chất học thuật.
-
-Sau khi chạy, truy cập:
-
-* `http://127.0.0.1:8000/health`
-* `http://127.0.0.1:8000/docs`
-* `http://127.0.0.1:8000/metrics`
-
-### Frontend
-
-```bash
-python -m streamlit run streamlit_app.py
-```
-
-## API endpoints
-
-| Method | Endpoint               | Mô tả |
-| ------ | ---------------------- | ----- |
-| GET    | `/health`              | Kiểm tra trạng thái dịch vụ |
-| GET    | `/metrics`             | Thống kê memory và plan |
-| POST   | `/chat`                | Gửi truy vấn chat |
-| GET    | `/chat`                | Hướng dẫn dùng chat query |
-| GET    | `/plan/{user_id}`      | Lấy kế hoạch của user |
-| POST   | `/plan/complete`       | Hoàn thành task |
-| DELETE | `/plan/{user_id}`      | Xóa toàn bộ kế hoạch |
-| DELETE | `/plan/{user_id}/{task_id}` | Xóa task cụ thể |
-| GET    | `/reminders/{user_id}` | Lấy nhắc nhở cho hôm nay |
-| GET    | `/memory/{user_id}`    | Xem history memory |
-| DELETE | `/memory/{user_id}`    | Xóa memory user |
-
-## Docker / Production
-
-### Docker build
-
-```bash
-docker build -t healthcare-agent .
-```
-
-### Run container
-
-```bash
-docker run -p 8000:8000 -v %CD%/memory_store:/app/memory_store --env-file .env healthcare-agent
-```
-
-### Docker Compose
 
 ```bash
 docker compose up --build
 ```
 
-## Hướng dẫn debug nhanh
+---
 
-* Nếu `fastapi` hoặc `langgraph` chưa cài, chạy `pip install -r requirements.txt`.
-* Nếu hệ thống không có dataset, RAG sẽ trả fallback thông báo.
-* `memory_store/` chứa cả file `.faiss` và `.json`, giúp giữ context người dùng giữa các lần chạy.
+## Công nghệ sử dụng
 
-## Ghi chú chất lượng
+| Công nghệ | Mục đích |
+|-----------|----------|
+| Python 3.13+ | Ngôn ngữ chính |
+| FastAPI | REST API framework |
+| LangGraph | Orchestration luồng hội thoại (StateGraph) |
+| FAISS | Vector database, semantic search |
+| SentenceTransformers | Embedding model (all-MiniLM-L6-v2) |
+| Groq / Ollama | LLM inference |
+| Tavily | Web search API |
+| Streamlit | Giao diện người dùng |
+| SpeechRecognition | Speech-to-text |
+| gTTS | Text-to-speech |
 
-* Dữ liệu người dùng lưu bằng FAISS + metadata JSON để đảm bảo truy vấn nhanh và dễ khôi phục.
-* Kiến trúc dịch vụ tách rõ controller (`app/api.py`) và business logic (`app/services/*`).
-* Mô-đun LLM có thể mở rộng thêm `transformers` / `llama_cpp` để chạy local.
+---
 
+## Dataset y tế
+
+Dữ liệu được tổng hợp từ các nguồn uy tín:
+- **WHO** (World Health Organization)
+- **CDC** (Centers for Disease Control and Prevention)
+- **NIH** (National Institutes of Health)
+
+Bao gồm 25+ bệnh lý: tiểu đường, tim mạch, ung thư, sốt rét, lao, viêm gan, COVID-19, hen suyễn, v.v.
+
+---
+
+## Ghi chú
+
+- Voice chat là tùy chọn: hệ thống hoạt động bình thường nếu không cài SpeechRecognition/gTTS
+- Dataset y tế tự động tạo nếu chưa có khi RAGService khởi tạo
+- Bộ nhớ vector được lưu trong `memory_store/` — giữ context qua các phiên
+- File `.faiss` và `.json` trong `memory_store/` được .gitignore bỏ qua

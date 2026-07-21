@@ -23,3 +23,16 @@ class CompleteTaskRequest(BaseModel):
 class DeleteManyTasksRequest(BaseModel):
     user_id: str = Field(...)
     indices: list[int] = Field(..., min_length=1, description="1-based task indices")
+
+
+class UpdateTaskRequest(BaseModel):
+    user_id: str = Field(...)
+    task_id: str = Field(...)
+    task: str | None = Field(None, description="New task text")
+    date: str | None = Field(None, description="New date YYYY-MM-DD")
+    priority: str | None = Field(None, description="New priority low/medium/high")
+
+
+class BatchPlanRequest(BaseModel):
+    user_id: str = Field(...)
+    task_ids: list[str] = Field(..., min_length=1)

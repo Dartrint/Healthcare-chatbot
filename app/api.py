@@ -8,12 +8,25 @@ from datetime import datetime
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 
+from fastapi import UploadFile, File, Form
+
 from app.agents.healthcare_agent import HealthcareAgent
 from app.config import PLANS_FILE, MEMORY_DIR
-from app.schemas import ChatRequest, ChatResponse, CompleteTaskRequest
+from app.schemas import BatchPlanRequest, ChatRequest, ChatResponse, CompleteTaskRequest, UpdateTaskRequest
 from app.services.memory import VectorMemoryService, safe_id
-from app.services.planner import clear_plan, complete_task, delete_task, get_plan, get_due_reminders
+from app.services.planner import (
+    batch_complete_tasks,
+    batch_delete_tasks,
+    clear_plan,
+    complete_task,
+    delete_task,
+    get_plan,
+    get_due_reminders,
+    update_plan,
+    update_task,
+)
 from app.services.quality_metrics import QualityMetricsCalculator, SystemMetrics
+from app.services.voice_chat import VoiceChatService
 from pathlib import Path
 
 app = FastAPI(
@@ -30,12 +43,17 @@ def root() -> dict[str, object]:
         "endpoints": {
             "health": "GET /health",
             "chat": "POST /chat",
-            "plan_view": "GET /plan/{user_id}",
-            "plan_complete": "POST /plan/complete",
-            "reminders": "GET /reminders/{user_id}",
+    "plan_view": "GET /plan/{user_id}",
+    "plan_complete": "POST /plan/complete",
+    "plan_batch_complete": "POST /plan/batch-complete",
+    "plan_batch_delete": "POST /plan/batch-delete",
+    "reminders": "GET /reminders/{user_id}",
             "memory": "GET /memory/{user_id}",
             "metrics": "GET /metrics",
             "clear_memory": "DELETE /memory/{user_id}",
+            "voice_transcribe": "POST /voice/transcribe",
+            "voice_synthesize": "POST /voice/synthesize",
+            "voice_status": "GET /voice/status",
         },
     }
 
@@ -48,6 +66,7 @@ app.add_middleware(
 
 agent = HealthcareAgent()
 quality_calculator = QualityMetricsCalculator()
+voice_service = VoiceChatService()
 system_metrics = SystemMetrics()
 
 
@@ -168,6 +187,12 @@ def complete_plan_info() -> dict[str, object]:
     }
 
 
+@app.post("/plan/update")
+def update_plan_task(request: UpdateTaskRequest) -> dict[str, str]:
+    """Update task text, date, or priority."""
+    return {"message": update_task(request.user_id, request.task_id, request.task, request.date, request.priority)}
+
+
 @app.post("/plan/complete")
 def complete_plan(request: CompleteTaskRequest) -> dict[str, str]:
     return {"message": complete_task(request.user_id, request.task_id)}
@@ -176,6 +201,18 @@ def complete_plan(request: CompleteTaskRequest) -> dict[str, str]:
 @app.delete("/plan/{user_id}/{task_id}")
 def delete_plan_task(user_id: str, task_id: str) -> dict[str, str]:
     return {"message": delete_task(user_id, task_id)}
+
+
+@app.post("/plan/create")
+def create_plan_task(request: UpdateTaskRequest) -> dict[str, str]:
+    """Create a new task with optional date/priority overrides."""
+    msg = update_plan(
+        request.user_id,
+        request.task or "",
+        date_override=request.date,
+        priority_override=request.priority,
+    )
+    return {"message": msg}
 
 
 @app.delete("/plan/{user_id}")
@@ -212,3 +249,111 @@ def clear_memory(user_id: str) -> dict[str, str]:
         if path.exists():
             path.unlink()
     return {"message": f"Memory cleared for {user_id}"}
+
+
+@app.post("/plan/batch-complete")
+def batch_complete_plan(request: BatchPlanRequest) -> dict[str, str]:
+    return {"message": batch_complete_tasks(request.user_id, request.task_ids)}
+
+
+@app.post("/plan/batch-delete")
+def batch_delete_plan(request: BatchPlanRequest) -> dict[str, str]:
+    return {"message": batch_delete_tasks(request.user_id, request.task_ids)}
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# VOICE CHAT ENDPOINTS
+# ══════════════════════════════════════════════════════════════════════════════
+
+@app.get("/voice/status")
+def voice_status() -> dict[str, object]:
+    """Check if voice chat is available."""
+    return {
+        "available": voice_service.is_available(),
+        "features": {
+            "speech_to_text": True,
+            "text_to_speech": True,
+        },
+    }
+
+
+@app.post("/voice/transcribe")
+async def transcribe_audio(
+    file: UploadFile = File(...),
+    language: str = Form("vi-VN")
+) -> dict[str, object]:
+    """
+    Transcribe audio file to text.
+    
+    Args:
+        file: Audio file (WAV format recommended)
+        language: Language code (vi-VN for Vietnamese, en-US for English)
+    """
+    if not voice_service.is_available():
+        raise HTTPException(
+            status_code=503,
+            detail="Voice chat service not available. Set GROQ_API_KEY in .env to enable STT & TTS"
+        )
+    
+    try:
+        # Read audio data
+        audio_data = await file.read()
+        
+        # Transcribe
+        result = voice_service.transcribe_audio(audio_data, language)
+        
+        if not result["success"]:
+            raise HTTPException(status_code=400, detail=result.get("error", "Transcription failed"))
+        
+        return result
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/voice/synthesize")
+def synthesize_speech(
+    request: dict
+) -> dict[str, object]:
+    """
+    Convert text to speech.
+    
+    Request body:
+        {
+            "text": "Text to convert to speech",
+            "language": "vi"  // vi for Vietnamese, en for English
+        }
+    
+    Returns:
+        {
+            "success": true,
+            "audio_base64": "base64 encoded audio data",
+            "language": "vi"
+        }
+    """
+    if not voice_service.is_available():
+        raise HTTPException(
+            status_code=503,
+            detail="Voice chat service not available. Set GROQ_API_KEY in .env to enable STT & TTS"
+        )
+    
+    text = request.get("text", "")
+    language = request.get("language", "vi")
+    
+    if not text:
+        raise HTTPException(status_code=400, detail="Text is required")
+    
+    try:
+        result = voice_service.text_to_speech(text, language)
+        
+        if not result["success"]:
+            raise HTTPException(status_code=400, detail=result.get("error", "Speech synthesis failed"))
+        
+        return result
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

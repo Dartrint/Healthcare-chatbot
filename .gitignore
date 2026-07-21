@@ -4,3 +4,7 @@ __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
+*.log
+*.faiss
+memory_store/
+measurements_report.json

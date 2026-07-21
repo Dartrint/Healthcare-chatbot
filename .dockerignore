@@ -1,6 +1,46 @@
+# Virtual env
 .venv/
+venv/
+
+# Python cache
 __pycache__/
 *.pyc
-memory_store/
+*.pyo
+
+# Git
+.git/
+
+# Environment
 .env
-.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Vector DB / Memory
+memory_store/
+faiss_index/
+chroma/
+db/
+
+# Node
+node_modules/
+
+# Models
+models/
+*.gguf
+*.bin
+*.pt
+*.pth
+*.safetensors
+
+# Temp
+tmp/
+temp/
+cache/

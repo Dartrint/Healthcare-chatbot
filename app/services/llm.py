@@ -1,8 +1,20 @@
 from __future__ import annotations
 
+import json
 from typing import Any
 
-from app.config import GROQ_API_KEY, LLM_MODEL, LLM_PROVIDER, LOCAL_LLM_PATH
+import requests
+from app.config import (
+    DEFAULT_MAX_TOKENS,
+    DEFAULT_TEMPERATURE,
+    GROQ_API_KEY,
+    LLM_MODEL,
+    LLM_PROVIDER,
+    LOCAL_LLM_PATH,
+    OLLAMA_BASE_URL,
+    OLLAMA_TIMEOUT,
+)
+from app.services.tracer import trace_llm
 
 try:
     from groq import Groq
@@ -22,7 +34,12 @@ class LLMService:
                 raise RuntimeError("groq package is required for GROQ provider")
             self.client = Groq(api_key=GROQ_API_KEY)
 
-    def generate(self, prompt: str, temperature=0.2, max_tokens=300) -> str:
+        if self.provider == "ollama":
+            self.ollama_url = OLLAMA_BASE_URL.rstrip("/")
+            self.timeout = OLLAMA_TIMEOUT
+
+    @trace_llm
+    def generate(self, prompt: str, temperature=DEFAULT_TEMPERATURE, max_tokens=DEFAULT_MAX_TOKENS) -> str:
         if self.provider == "groq" and self.client is not None:
             try:
                 res = self.client.chat.completions.create(
@@ -34,6 +51,31 @@ class LLMService:
                 return res.choices[0].message.content.strip()
             except Exception:
                 return "⚠️ LLM error: Groq request failed."
+
+        if self.provider == "ollama":
+            try:
+                payload = {
+                    "model": self.model,
+                    "prompt": prompt,
+                    "stream": False,
+                }
+                response = requests.post(
+                    f"{self.ollama_url}/api/generate",
+                    json=payload,
+                    timeout=self.timeout,
+                )
+                response.raise_for_status()
+                result = response.json()
+                return result.get("response", "").strip()
+            except requests.exceptions.ConnectionError:
+                return (
+                    "⚠️ Không thể kết nối Ollama. Hãy đảm bảo Ollama đang chạy:\n"
+                    "1. Cài Ollama: https://ollama.com/download\n"
+                    "2. Chạy: ollama serve\n"
+                    "3. Tải model: ollama pull llama3.2"
+                )
+            except Exception as e:
+                return f"⚠️ LLM error: {str(e)}"
 
         if self.provider == "local":
             if not self.local_model_path:

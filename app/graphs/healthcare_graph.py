@@ -11,6 +11,7 @@ from app.services.router import RouterService
 from app.services.symptom import SymptomService
 from app.services.llm import LLMService
 from app.services.mcp_gateway import MCPGateway
+from app.services.tracer import trace_chain
 
 
 INTENT_BRANCH = {
@@ -35,9 +36,6 @@ class HealthcareGraph:
 
         self.graph = self._build_graph().compile()
 
-    # =========================
-    # GRAPH
-    # =========================
     def _build_graph(self) -> StateGraph:
         g = StateGraph(dict)
 
@@ -55,9 +53,6 @@ class HealthcareGraph:
 
         return g
 
-    # =========================
-    # ROUTER (HYBRID)
-    # =========================
     def _route(self, state: Dict[str, Any]) -> Dict[str, Any]:
         user_input = _clean(state.get("user_input"))
         user_id = _clean(state.get("user_id", "user_1"))
@@ -84,7 +79,7 @@ class HealthcareGraph:
             "user_id": user_id,
             "chat_context": chat_context,
             "memory_context": memory_context,
-            "routing": {"intent": intent, "confidence": confidence},
+            "routing": {"intent": intent, "confidence": confidence, "reason": routing.get("reason", "")},
         })
 
         return state
@@ -93,106 +88,135 @@ class HealthcareGraph:
         intent = state.get("routing", {}).get("intent", "CHAT")
         return INTENT_BRANCH.get(intent, "chat")
 
-    # =========================
-    # NODES
-    # =========================
     def _rag(self, state: Dict[str, Any]) -> Dict[str, Any]:
+        """Medical knowledge: disease definitions, medications, treatments using RAG + web search."""
         query = state["user_input"]
         docs = self.rag.retrieve(query, k=5)
         external_context = self.mcp.query("medical_knowledge", query)
+        web_results = self.mcp.query("web_search", f"medical health {query}")
 
-        prompt = f"""
-You are a medical assistant.
+        prompt = f"""Bạn là trợ lý y tế chuyên nghiệp. Trả lời ngắn gọn, chính xác bằng tiếng Việt dựa trên tài liệu y khoa được cung cấp.
 
-Docs:
-{chr(10).join(f"- {d}" for d in docs)}
+Tài liệu tham khảo:
+{chr(10).join(f"- {d}" for d in docs) if docs else "Không có tài liệu phù hợp."}
 
-MCP context:
-{external_context}
+Thông tin bổ sung:
+{external_context if external_context else "Không có thông tin bổ sung."}
 
-Relevant memory:
+Kết quả tìm kiếm web (thông tin mới nhất):
+{web_results if web_results else "Không có kết quả tìm kiếm web."}
+
+Lịch sử hội thoại:
 {state.get("memory_context", "")}
 
-Question: {query}
+Câu hỏi: {query}
 
-Answer clearly and safely. Add disclaimer.
+Trả lời:
 """
 
-        state["response"] = self.llm.generate(prompt, max_tokens=300)
+        response = self.llm.generate(prompt, max_tokens=1024, temperature=0.3)
+        state["response"] = response
         return state
 
     def _symptom(self, state: Dict[str, Any]) -> Dict[str, Any]:
+        """Analyze personal symptoms and provide health advice."""
+        context = f"{state.get('chat_context', '')}\n{state.get('memory_context', '')}"
         state["response"] = self.symptom.analyze(
             state["user_input"],
-            f"{state.get('chat_context', '')}\n{state.get('memory_context', '')}"
+            context
         )
         return state
 
     def _planner(self, state: Dict[str, Any]) -> Dict[str, Any]:
+        """Handle task/reminder management. Chat is ONLY for creating tasks.
+        Delete/complete/view operations are handled via buttons in the UI.
+        """
         query = state["user_input"]
         user_id = state["user_id"]
         q = query.lower()
 
-        if any(x in q for x in ["clear plan", "xóa hết", "xoa het", "xóa toàn bộ", "xoa toan bo"]):
-            state["response"] = clear_plan(user_id)
+        # Nếu người dùng muốn xem kế hoạch → hướng dẫn xem ở sidebar
+        if any(x in q for x in ["show", "list", "xem", "lịch", "lich", "kế hoạch", "ke hoach"]):
+            items = get_plan(user_id)
+            if items:
+                lines = []
+                for i, it in enumerate(items):
+                    icon = "✅" if it["status"] == "completed" else "⏳"
+                    lines.append(f"{i+1}. {icon} **{it['task']}** — {it['date']} ({it['priority']})")
+                state["response"] = "📋 **Kế hoạch của bạn:**\n\n" + "\n".join(lines) + \
+                    "\n\n💡 *Dùng các nút 🗑️/✅ trong sidebar để xoá hoặc hoàn thành task.*"
+            else:
+                state["response"] = "📋 Bạn chưa có kế hoạch nào. Hãy nói *'Nhắc tôi...'* để tạo mới."
             return state
 
+        # Nếu đề cập đến xoá → hướng dẫn dùng button
         if any(x in q for x in ["delete", "remove", "xóa", "xoa"]):
             items = get_plan(user_id)
             if not items:
-                state["response"] = "📋 No plan found."
+                state["response"] = "📋 Không có kế hoạch nào để xoá."
                 return state
-
-            # delete by sequence number: "xoa task 2"
-            number_match = re.search(r"\b(\d+)\b", q)
-            if number_match:
-                idx = int(number_match.group(1)) - 1
-                if 0 <= idx < len(items):
-                    state["response"] = delete_task(user_id, items[idx]["id"])
-                else:
-                    state["response"] = "⚠️ Invalid task number."
-                return state
-
-            # delete by task id
-            id_match = re.search(r"\b[0-9a-f]{8}-[0-9a-f-]{27}\b", q)
-            if id_match:
-                state["response"] = delete_task(user_id, id_match.group(0))
-                return state
-
-            state["response"] = "⚠️ Please provide task number or task id to delete."
+            state["response"] = "🗑️ Bạn có thể xoá task trực tiếp bằng nút **🗑️** trong bảng Plan (sidebar bên trái)."
             return state
 
-        if any(x in q for x in ["show", "list", "xem", "plan"]):
+        # Nếu đề cập đến hoàn thành → hướng dẫn dùng button
+        if any(x in q for x in ["complete", "done", "hoàn thành", "xong", "done"]):
             items = get_plan(user_id)
-            if items:
-                text = "\n".join(f"{i+1}. {it['task']} ({it['status']})" for i, it in enumerate(items))
-                state["response"] = f"📋 Plan:\n{text}"
-            else:
-                state["response"] = "📋 No plan found."
-        else:
-            state["response"] = update_plan(user_id, query)
+            if not items:
+                state["response"] = "📋 Không có task nào để hoàn thành."
+                return state
+            state["response"] = "✅ Bạn có thể đánh dấu task hoàn thành bằng nút **✅** trong bảng Plan (sidebar bên trái)."
+            return state
 
+        # Tạo task mới (mặc định)
+        state["response"] = update_plan(user_id, query)
         return state
 
     def _chat(self, state: Dict[str, Any]) -> Dict[str, Any]:
-        prompt = f"""
-You are a friendly healthcare assistant.
+        """Non-medical conversation: use MCP tools for external data + LLM native knowledge."""
+        query = state["user_input"]
 
-Recent chat context:
+        # Collect MCP tool data (may be empty if Tavily not configured)
+        weather_info = self.mcp.query("weather", query)
+        time_info = self.mcp.query("time_date", query)
+        web_info = self.mcp.query("web_search", query)
+
+        # Build context lines only for non-empty data
+        tool_parts = []
+        if weather_info:
+            tool_parts.append(f"- Thời tiết: {weather_info}")
+        if time_info:
+            tool_parts.append(f"- Thời gian: {time_info}")
+        if web_info:
+            tool_parts.append(f"- Tra cứu web: {web_info}")
+
+        tool_context = "\n".join(tool_parts)
+        tool_section = f"\nDữ liệu tra cứu:\n{tool_context}\n" if tool_context else ""
+
+        system_prompt = f"""Bạn là trợ lý AI thông minh, thân thiện, vui vẻ. Trả lời bằng tiếng Việt tự nhiên, chính xác.
+
+Khả năng của bạn:
+- **Trò chuyện xã giao** — chào hỏi, cảm ơn, tạm biệt, khen ngợi
+- **Kiến thức tổng hợp** — lịch sử, khoa học, công nghệ, văn hóa, ẩm thực, thể thao, giải trí. Dùng kiến thức vốn có của bạn để trả lời.
+- **Thời tiết & thời gian** — dùng dữ liệu thực tế từ công cụ nếu có
+- **Tra cứu thông tin thời gian thực** — dùng kết quả web (nếu có)
+- **Tư vấn đời sống** — công việc, học tập, kỹ năng mềm, tâm lý
+
+⚠️ KHÔNG trả lời câu hỏi y tế, chuẩn đoán, thuốc men. Nếu người dùng hỏi về y tế, hãy hướng dẫn họ đặt câu hỏi y tế cụ thể.
+{tool_section}
+Lịch sử trò chuyện:
 {state.get("chat_context", "")}
 
-Conversation memory:
+Ký ức về người dùng:
 {state.get("memory_context", "")}
 
-User: {state["user_input"]}
-"""
+Người dùng: {query}
+Trả lời:"""
 
-        state["response"] = self.llm.generate(prompt, max_tokens=200)
+        response = self.llm.generate(system_prompt, max_tokens=1024, temperature=0.7)
+        state["response"] = response
         return state
 
-    # =========================
-    # RUN
-    # =========================
+    @trace_chain
     def run(self, user_id: str, user_input: str) -> Dict[str, Any]:
         result = self.graph.invoke({
             "user_id": user_id,

@@ -16,11 +16,6 @@ try:
 except ImportError:  # pragma: no cover
     faiss = None
 
-try:
-    import kagglehub
-except ImportError:  # pragma: no cover
-    kagglehub = None
-
 
 class RAGService:
     def __init__(self) -> None:
@@ -34,6 +29,18 @@ class RAGService:
         self._ensure_index()
 
     def _find_csv_file(self, folder: Path) -> Path | None:
+        """Tìm file CSV trong thư mục"""
+        # Ưu tiên real data từ WHO/CDC/NIH APIs
+        real_data = folder / "real_healthcare_data.csv"
+        if real_data.exists():
+            return real_data
+
+        # Fallback: who_healthcare_data.csv (static WHO dataset)
+        who_data = folder / "who_healthcare_data.csv"
+        if who_data.exists():
+            return who_data
+
+        # Tìm CSV khác
         for root, _, files in os.walk(folder):
             for filename in files:
                 if filename.lower().endswith(".csv"):
@@ -41,32 +48,48 @@ class RAGService:
         return None
 
     def _load_documents(self) -> None:
+        """Load medical documents from public API data"""
         self.data_dir.mkdir(parents=True, exist_ok=True)
         csv_path = self._find_csv_file(self.data_dir)
 
-        if not csv_path and kagglehub:
-            try:
-                self.data_dir = Path(kagglehub.dataset_download("prasad22/healthcare-dataset"))
-                csv_path = self._find_csv_file(self.data_dir)
-            except Exception:
-                csv_path = None
-
-        if not csv_path:
-            self.docs = ["No healthcare dataset is available. Please add a CSV dataset to the data folder."]
+        # Nếu không có data, hiển thị thông báo
+        if not csv_path or not csv_path.exists():
+            self.docs = [
+                "Healthcare data is not available. Please ensure a CSV dataset exists in the data/ directory."
+            ]
             return
 
+        # Load CSV data
         with csv_path.open("r", encoding="utf-8", errors="ignore") as source:
             reader = csv.DictReader(source)
             self.docs = []
             for row in reader:
+                # Ưu tiên field 'text', sau đó các field khác
+                text_fields = ["text", "description", "symptoms", "disease", "topic"]
                 value = next(
-                    (row.get(field, "") for field in ["text", "description", "symptoms", "disease"] if row.get(field)),
+                    (row.get(field, "") for field in text_fields if row.get(field)),
                     "",
                 )
                 if value:
                     self.docs.append(value.strip())
 
-        self.docs = self.docs[:5000]
+        if self.docs:
+            print(f"[OK] Loaded {len(self.docs)} medical records from {csv_path.name}")
+            # Log real data sources from CSV
+            try:
+                sources = set()
+                with csv_path.open("r", encoding="utf-8", errors="ignore") as f:
+                    for row in csv.DictReader(f):
+                        if "source" in row and row["source"]:
+                            sources.add(row["source"])
+                if sources:
+                    print(f"[DATA] Real data sources: {', '.join(sorted(sources))}")
+                else:
+                    print(f"[DATA] Data source: {csv_path.name}")
+            except:
+                print(f"[DATA] Data source: {csv_path.name}")
+        else:
+            self.docs = ["No valid healthcare data found in the dataset."]
 
     def _ensure_index(self) -> None:
         if self.index is not None:

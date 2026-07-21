@@ -12,6 +12,7 @@ groq>=0.5.0
 langchain>=0.2.0
 langgraph>=0.2.0
 mcp>=1.0.0
+
 # ── RAG / Embedding ─────────────────
 faiss-cpu>=1.7.4
 sentence-transformers>=2.7.0
@@ -20,6 +21,11 @@ sentence-transformers>=2.7.0
 numpy>=1.24.0
 python-dotenv>=1.0.0
 
-# ── Dataset (Kaggle) ────────────────
-kagglehub>=1.0.0
-pandas>=2.0.0
+
+# ── Web Search ──────────────────────
+tavily-python>=0.7.0  # Real-time web search via Tavily API
+
+
+# ── Voice Chat ──────────────────────
+edge-tts>=6.0.0    # Free TTS (no API key needed)
+# STT via Groq Whisper (requires GROQ_API_KEY)
