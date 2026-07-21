@@ -1,195 +1,129 @@
-﻿# Healthcare AI Agent — Trợ Lý Y Tế Thông Minh
+﻿# Healthcare AI Chatbot
 
-Hệ thống trợ lý y tế AI sử dụng **LangGraph** để điều phối luồng hội thoại, **FAISS** cho bộ nhớ vector, và **RAG** để truy vấn kiến thức y khoa. Hỗ trợ chat văn bản, nhập liệu giọng nói, quản lý kế hoạch chăm sóc sức khỏe, và tìm kiếm thông tin y tế từ web.
+An intelligent healthcare assistant leveraging **LangGraph**, **RAG (Retrieval-Augmented Generation)**, and **FAISS** vector memory to provide medical information, symptom analysis, and personalized health planning.
 
----
+## 🎯 Key Features
 
-## Kiến trúc tổng quan
+### 1. **Intelligent Conversation Routing**
+- Automatic intent classification using LLM and vector memory
+- 4 specialized branches: Medical RAG, Symptom Analysis, Health Planning, General Chat
+- Context-aware responses based on conversation history
+
+### 2. **Medical Knowledge RAG**
+- Comprehensive dataset of 25+ common conditions (WHO, CDC, NIH sources)
+- Covers symptoms, causes, prevention, and treatment
+- Web search fallback (Tavily API) for up-to-date information
+
+### 3. **Symptom Analysis**
+- Personal health assessment based on user-reported symptoms
+- Severity evaluation and medical advice recommendations
+- Privacy-focused: data stored locally with FAISS
+
+### 4. **Health Planning & Reminders**
+- Create and manage health-related tasks
+- Medication reminders and appointment tracking
+- Interactive UI for task completion and deletion
+
+### 5. **Voice Interaction**
+- Speech-to-Text: Upload audio files for transcription
+- Text-to-Speech: Automatic voice responses
+- Supports WAV, MP3, OGG formats
+
+### 6. **Semantic Memory (FAISS)**
+- Vector-based conversation history storage
+- Semantic similarity search for context retrieval
+- Persistent memory across sessions
+
+## 🏗️ Architecture
 
 ```
-┌─────────────┐     ┌──────────┐     ┌──────────────────────────────────────┐
-│  Streamlit  │────▶│ FastAPI  │────▶│        LangGraph StateGraph          │
-│  (UI)       │◀────│ (API)    │◀────│                                      │
-└─────────────┘     └──────────┘     │  route → {rag, symptom, planner,    │
-                                      │           chat}                     │
-                                      └──────────┬───────────────────────────┘
-                                                 │
-                          ┌──────────────────────┼──────────────────────────┐
-                          ▼                      ▼                          ▼
-                   ┌──────────┐          ┌──────────────┐          ┌──────────────┐
-                   │ RAG      │          │ Symptom      │          │ Planner      │
-                   │ (+Web)   │          │ (LLM phân    │          │ (quản lý     │
-                   │          │          │  tích triệu  │          │  task)       │
-                   │          │          │  chứng)      │          │              │
-                   └──────────┘          └──────────────┘          └──────────────┘
-                          │                      │                        │
-                          ▼                      ▼                        ▼
-                   ┌──────────┐          ┌──────────────┐          ┌──────────────┐
-                   │ Memory   │          │ LLM (Groq/   │          │ MCP Gateway  │
-                   │ (FAISS)  │          │ Ollama)      │          │ (thời tiết,  │
-                   │          │          │              │          │  web search) │
-                   └──────────┘          └──────────────┘          └──────────────┘
+User Interface (Streamlit)
+         ↓
+    FastAPI REST API
+         ↓
+  LangGraph StateGraph
+    ↓         ↓         ↓         ↓
+  RAG    Symptom   Planner    Chat
+   ↓         ↓         ↓         ↓
+FAISS    LLM      MCP Tools  Memory
+       (Groq)   (Weather,
+               Web Search)
 ```
 
-### Luồng xử lý một yêu cầu chat
+## 🛠️ Tech Stack
 
-1. **API nhận request** (`POST /chat`) → gọi `HealthcareAgent.chat(user_id, message)`
-2. **Agent** khởi tạo `HealthcareGraph` và gọi `graph.run()`
-3. **RouterService** phân loại ý định người dùng dựa trên:
-   - Lịch sử hội thoại (6 message gần nhất)
-   - Bộ nhớ vector (3 kết quả tương đồng nhất từ FAISS)
-   - Ý định của message trước đó
-4. **StateGraph** rẽ nhánh dựa trên ý định:
+| Technology | Purpose |
+|-----------|---------|
+| **Python 3.13+** | Core language |
+| **FastAPI** | REST API framework |
+| **LangGraph** | Conversation orchestration |
+| **FAISS** | Vector database for semantic search |
+| **SentenceTransformers** | Text embedding (all-MiniLM-L6-v2) |
+| **Groq / Ollama** | LLM inference |
+| **Streamlit** | User interface |
+| **Tavily API** | Web search integration |
 
-| Intent | Nhánh      | Xử lý                                                                 |
-|--------|------------|-----------------------------------------------------------------------|
-| `RAG`  | Medical    | Tra cứu RAG (bệnh, thuốc, điều trị) + web search y tế + LLM tổng hợp |
-| `SYMPTOM` | Sức khỏe cá nhân | Phân tích triệu chứng, đưa ra lời khuyên                               |
-| `PLANNER` | Kế hoạch   | Tạo task mới, hiển thị kế hoạch, hướng dẫn xoá/hoàn thành qua UI     |
-| `CHAT` | Trò chuyện | Hội thoại thông thường + tra cứu thời tiết/thời gian/web              |
-
-5. **Memory** được lưu tự động sau mỗi lượt chat (FAISS + JSON metadata)
-
----
-
-## Cấu trúc thư mục
+## 📁 Project Structure
 
 ```
 Healthcare-chatbot/
 ├── app/
-│   ├── api.py                    # REST API (FastAPI) — endpoints, middleware
-│   ├── config.py                 # Biến môi trường, đường dẫn
-│   ├── schemas.py                # Pydantic models
+│   ├── api.py                    # FastAPI endpoints
 │   ├── agents/
-│   │   └── healthcare_agent.py   # Lớp agent chính, interface cho graph
+│   │   └── healthcare_agent.py   # Main agent class
 │   ├── graphs/
-│   │   └── healthcare_graph.py   # LangGraph StateGraph + 4 nhánh xử lý
+│   │   └── healthcare_graph.py   # LangGraph state machine
 │   └── services/
-│       ├── embedding.py          # Tạo embedding vector (SentenceTransformers)
-│       ├── llm.py                # Tích hợp LLM (Groq / Ollama)
-│       ├── memory.py             # VectorMemoryService (FAISS + JSON)
-│       ├── mcp_gateway.py        # Cổng tool: thời tiết, thời gian, web search
-│       ├── planner.py            # Quản lý kế hoạch / task / reminder
-│       ├── quality_metrics.py    # Đo lường chất lượng hệ thống
-│       ├── rag.py                # Retrieval-Augmented Generation (dataset y tế)
-│       ├── router.py             # Phân loại ý định hội thoại
-│       ├── symptom.py            # Phân tích triệu chứng sức khỏe
-│       ├── tracer.py             # Decorator tracing (LangChain)
-│       └── voice_chat.py         # Speech-to-text + Text-to-speech
+│       ├── router.py             # Intent classification
+│       ├── rag.py                # Medical knowledge retrieval
+│       ├── symptom.py            # Symptom analysis
+│       ├── planner.py            # Task management
+│       ├── memory.py             # FAISS vector memory
+│       ├── llm.py                # LLM integration
+│       ├── voice_chat.py         # Speech services
+│       └── mcp_gateway.py        # External tools (weather, search)
 ├── data/
-│   ├── real_healthcare_data.csv  # Dataset y tế (bệnh, triệu chứng, điều trị)
-│   └── who_healthcare_data.csv   # Dataset từ WHO
-├── memory_store/                 # FAISS index + JSON metadata (tự động tạo)
-├── .env.example                  # Mẫu cấu hình môi trường
-├── .gitignore
-├── docker-compose.yml            # Docker Compose
-├── Dockerfile
-├── main.py                       # Entry point FastAPI (uvicorn)
-├── requirements.txt
-└── streamlit_app.py              # Giao diện người dùng (Streamlit)
+│   ├── real_healthcare_data.csv  # Medical dataset
+│   └── who_healthcare_data.csv   # WHO data
+├── streamlit_app.py              # UI application
+├── main.py                       # API entry point
+└── requirements.txt
 ```
 
----
+## 🚀 Quick Start
 
-## Tính năng chi tiết
-
-### 1. Chat thông minh với định tuyến tự động (`/chat`)
-- Phân loại ý định người dùng thành 4 nhánh
-- Kết hợp lịch sử hội thoại + bộ nhớ vector để đưa ra câu trả lời chính xác
-- Hỗ trợ tiếng Việt
-
-### 2. Tra cứu kiến thức y khoa (RAG)
-- 25+ bệnh lý phổ biến từ WHO, CDC, NIH
-- Dữ liệu: triệu chứng, nguyên nhân, phòng ngừa, điều trị
-- Fallback: tìm kiếm web y tế (Tavily) khi dataset không đủ
-
-### 3. Phân tích triệu chứng cá nhân
-- Nhập triệu chứng → nhận tư vấn sức khỏe sơ bộ
-- Cảnh báo nếu triệu chứng nghiêm trọng (cần gặp bác sĩ)
-
-### 4. Quản lý kế hoạch chăm sóc sức khỏe
-- Tạo task: "Nhắc tôi uống thuốc lúc 8h sáng"
-- Xem kế hoạch, đánh dấu hoàn thành, xoá task (qua UI buttons)
-- Reminder theo ngày
-
-### 5. Voice Chat
-- **Speech-to-Text**: Upload file audio → nhận text
-- **Text-to-Speech**: Tự động phát giọng nói phản hồi
-- Hỗ trợ: WAV, MP3, OGG
-
-### 6. Bộ nhớ ngữ nghĩa (FAISS)
-- Lưu trữ lịch sử chat dưới dạng embedding vector
-- Truy xuất thông tin tương đồng theo ngữ nghĩa
-- Persist giữa các lần chạy (file `.faiss` + `.json`)
-
-### 7. Tra cứu thời gian thực
-- Thời tiết (mô phỏng / thực tế)
-- Thời gian hiện tại
-- Web search (Tavily API) cho thông tin cập nhật
-
-### 8. API Endpoints
-
-| Method | Endpoint | Mô tả |
-|--------|----------|-------|
-| GET | `/` | Trang chủ + danh sách endpoints |
-| GET | `/health` | Kiểm tra trạng thái |
-| GET | `/metrics` | Thống kê hệ thống (bộ nhớ, kế hoạch) |
-| POST | `/chat` | Gửi tin nhắn chat |
-| GET | `/plan/{user_id}` | Xem kế hoạch người dùng |
-| POST | `/plan/complete` | Đánh dấu task hoàn thành |
-| POST | `/plan/batch-complete` | Hoàn thành nhiều task |
-| POST | `/plan/batch-delete` | Xoá nhiều task |
-| DELETE | `/plan/{user_id}` | Xoá toàn bộ kế hoạch |
-| DELETE | `/plan/{user_id}/{task_id}` | Xoá một task |
-| GET | `/reminders/{user_id}` | Lấy reminder hôm nay |
-| GET | `/memory/{user_id}` | Xem lịch sử memory |
-| DELETE | `/memory/{user_id}` | Xoá memory |
-| GET | `/voice/status` | Kiểm tra voice service |
-| POST | `/voice/transcribe` | Chuyển audio → text |
-| POST | `/voice/synthesize` | Chuyển text → audio |
-
----
-
-## Cài đặt & Chạy
-
-### Yêu cầu
-- Python 3.13+
-- pip / venv
-
-### Cài đặt
+### Installation
 
 ```bash
-# Clone & cd vào thư mục
-
-# Tạo virtual environment
+# Create virtual environment
 python -m venv .venv
-.venv\Scripts\activate    # Windows
+.venv\Scripts\activate  # Windows
 source .venv/bin/activate  # Linux/macOS
 
-# Cài dependencies
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-### Cấu hình
+### Configuration
 
-Copy `.env.example` thành `.env` và điền API key:
+Copy `.env.example` to `.env` and add your API keys:
 
 ```env
-GROQ_API_KEY=gsk_...             # Bắt buộc cho LLM
-LLM_PROVIDER=groq                 # hoặc ollama
+GROQ_API_KEY=your_groq_api_key_here
+LLM_PROVIDER=groq
 LLM_MODEL=llama-3.1-8b-instant
-TAVILY_API_KEY=tvly-...           # Tùy chọn (web search)
+TAVILY_API_KEY=your_tavily_api_key_here  # Optional
 ```
 
-### Chạy
+### Running
 
 ```bash
-# Backend API
+# Start FastAPI backend
 python main.py
 # → http://127.0.0.1:8000
-# → http://127.0.0.1:8000/docs (Swagger)
+# → http://127.0.0.1:8000/docs (API documentation)
 
-# Giao diện Streamlit (terminal khác)
+# Start Streamlit UI (separate terminal)
 streamlit run streamlit_app.py
 ```
 
@@ -199,39 +133,52 @@ streamlit run streamlit_app.py
 docker compose up --build
 ```
 
----
+## 📊 API Endpoints
 
-## Công nghệ sử dụng
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/chat` | Send chat message |
+| GET | `/plan/{user_id}` | View user's health plan |
+| POST | `/plan/complete` | Mark task as complete |
+| DELETE | `/plan/{user_id}/{task_id}` | Delete specific task |
+| GET | `/reminders/{user_id}` | Get today's reminders |
+| POST | `/voice/transcribe` | Audio to text |
+| POST | `/voice/synthesize` | Text to audio |
+| GET | `/memory/{user_id}` | View conversation history |
+| GET | `/metrics` | System statistics |
 
-| Công nghệ | Mục đích |
-|-----------|----------|
-| Python 3.13+ | Ngôn ngữ chính |
-| FastAPI | REST API framework |
-| LangGraph | Orchestration luồng hội thoại (StateGraph) |
-| FAISS | Vector database, semantic search |
-| SentenceTransformers | Embedding model (all-MiniLM-L6-v2) |
-| Groq / Ollama | LLM inference |
-| Tavily | Web search API |
-| Streamlit | Giao diện người dùng |
-| SpeechRecognition | Speech-to-text |
-| gTTS | Text-to-speech |
+## 💡 Use Cases
 
----
+- **Medical Information Lookup**: Ask about diseases, symptoms, treatments
+- **Personal Health Assistant**: Track symptoms and get preliminary advice
+- **Medication Management**: Set reminders and track adherence
+- **Health Education**: Learn about prevention and healthy habits
+- **Voice Accessibility**: Hands-free interaction for accessibility
 
-## Dataset y tế
+## 🔒 Privacy & Security
 
-Dữ liệu được tổng hợp từ các nguồn uy tín:
+- All user data stored locally in FAISS vector database
+- No external data transmission except API calls (Groq, Tavily)
+- Sensitive files (.env, memory_store/) excluded from version control
+- Medical advice is informational only - always consult healthcare professionals
+
+## 📝 Data Sources
+
+Medical information curated from:
 - **WHO** (World Health Organization)
 - **CDC** (Centers for Disease Control and Prevention)
 - **NIH** (National Institutes of Health)
 
-Bao gồm 25+ bệnh lý: tiểu đường, tim mạch, ung thư, sốt rét, lao, viêm gan, COVID-19, hen suyễn, v.v.
+## 🤝 Contributing
+
+This project demonstrates:
+- Advanced LLM orchestration with LangGraph
+- RAG implementation for domain-specific knowledge
+- Vector database integration for semantic search
+- Microservices architecture with FastAPI
+- Real-time conversational AI
+- Healthcare-focused application development
 
 ---
 
-## Ghi chú
-
-- Voice chat là tùy chọn: hệ thống hoạt động bình thường nếu không cài SpeechRecognition/gTTS
-- Dataset y tế tự động tạo nếu chưa có khi RAGService khởi tạo
-- Bộ nhớ vector được lưu trong `memory_store/` — giữ context qua các phiên
-- File `.faiss` và `.json` trong `memory_store/` được .gitignore bỏ qua
+**Disclaimer**: This chatbot provides general health information only and is not a substitute for professional medical advice, diagnosis, or treatment.
